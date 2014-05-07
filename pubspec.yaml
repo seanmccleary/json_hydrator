@@ -1,0 +1,3 @@
+name: json_mapper
+dependencies:
+  browser: any
