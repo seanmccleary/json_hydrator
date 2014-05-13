@@ -11,10 +11,28 @@ void main() {
   p.parent.name = "Tom";
   p.dogs = ["Boris", "Max", "Bella"];
   p.schools = {"Grade": "Jacksonville", "Middle": "Mac", "High": "SMHS"};
+  p.favoriteColor = new Color();
+  p.favoriteColor.r = 0xff;
+  p.parent.favoriteColor = new Color(0, 0xC0);
 
   var mapper = new JsonMapper<Person>();
-  mapper.objectToJson(p).then((json) => print(json));
 
+  var json1 = '';
+  var json2 = '';
+
+  mapper.objectToJson(p).then((json) {
+    json1 = json;
+    Person p1 = mapper.getObject(json);
+
+    mapper.objectToJson(p1).then((json) {
+      json2 = json;
+
+      print(json1);
+      print(json2);
+      print(json1 == json2 ? "They match!" : "They do not match.");
+
+    });
+  });
 }
 
 class Person extends Object {
@@ -23,12 +41,63 @@ class Person extends Object {
   Person parent;
   List<String> dogs;
   Map<String> schools;
+  var something;
+  Color favoriteColor;
+}
+
+class Color {
+  int r;
+  int g;
+  int b;
+
+  Color([this.r = 0, this.g = 0, this.b = 0]);
 }
 
 class JsonMapper<T> {
 
   T getObject(String json) {
+    return this._map2Object(JSON.decode(json), T);
+  }
 
+  Object _map2Object(Map decoded, Type type) {
+
+    mirrors.ClassMirror classMirror = mirrors.reflectClass(type);
+    mirrors.InstanceMirror instanceMirror = classMirror.newInstance(new Symbol(''), []);
+
+    classMirror.instanceMembers.forEach((mirrors.Symbol symbol, mirrors.MethodMirror mm) {
+
+      if (mm.isSetter && !mm.isPrivate && !mm.isStatic) {
+
+        String setterName = mirrors.MirrorSystem.getName(symbol);
+        // Setters have an annoying "=" on the end
+        setterName = setterName.substring(0, setterName.length - 1);
+
+        if (decoded.containsKey(setterName)) {
+
+          String setterType = mirrors.MirrorSystem.getName(mm.parameters.first.type.simpleName);
+
+          var setValue = null;
+
+          if (
+            setterType == 'num'
+            || setterType == 'int'
+            || setterType == 'double'
+            || setterType == 'bool'
+            || setterType == 'String'
+            || setterType == 'dynamic'
+            || (setterType == 'Map' && decoded[setterName] is Map)
+            || (setterType == 'List' && decoded[setterName] is List)
+          ) {
+            setValue = decoded[setterName];
+          } else if (decoded[setterName] is Map) {
+            setValue = this._map2Object(decoded[setterName], mm.parameters.first.type.reflectedType);
+          }
+          instanceMirror.setField(new Symbol(setterName), setValue);
+        }
+      }
+    });
+
+    return instanceMirror.reflectee;
   }
 
   Future<String> objectToJson(Object object) {
@@ -53,7 +122,6 @@ class JsonMapper<T> {
     return completer.future;
 
   }
-
 
   Future objectToSerializable(Object object, [key=null]) {
     var completer = new Completer();
