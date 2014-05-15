@@ -20,19 +20,23 @@ void main() {
   var json1 = '';
   var json2 = '';
 
-  mapper.objectToJson(p).then((json) {
-    json1 = json;
-    Person p1 = mapper.getObject(json);
-
-    mapper.objectToJson(p1).then((json) {
+  mapper.objectToJson(p)
+    .then((json) {
+      json1 = json;
+      print("JSON: " + json);
+      return mapper.getObject(json);
+    })
+    .then((Person p) {
+      print("Object: " + p.toString());
+      return mapper.objectToJson(p);
+    })
+    .then((json) {
       json2 = json;
-
-      print(json1);
-      print(json2);
-      print(json1 == json2 ? "They match!" : "They do not match.");
-
+      print("JSON: " + json);
+      print(json1 == json2 ? "THEY MATCH" : "THEY DO NOT MATCH");
     });
-  });
+
+
 }
 
 class Person extends Object {
@@ -55,8 +59,11 @@ class Color {
 
 class JsonMapper<T> {
 
-  T getObject(String json) {
-    return this._map2Object(JSON.decode(json), T);
+  Future<T> getObject(String json) {
+    Completer completer = new Completer();
+    T object = this._map2Object(JSON.decode(json), T);
+    completer.complete(object);
+    return completer.future;
   }
 
   Object _map2Object(Map decoded, Type type) {
@@ -99,6 +106,26 @@ class JsonMapper<T> {
 
     return instanceMirror.reflectee;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   Future<String> objectToJson(Object object) {
     var completer = new Completer<String>();
