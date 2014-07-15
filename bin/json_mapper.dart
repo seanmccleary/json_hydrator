@@ -54,7 +54,7 @@ class Color {
   int g;
   int b;
 
-  Color([this.r = 0, this.g = 0, this.b = 0]);
+  Color(this.r, [this.g = 0, this.b = 0]);
 
 }
 
@@ -83,7 +83,21 @@ class JsonMapper<T> {
 
     ClassMirror classMirror = reflectClass(type);
 
-    InstanceMirror instanceMirror = classMirror.newInstance(new Symbol(''), []);
+    // OK, before we can instantiate an object, we need to know if it takes any
+    // constructor parameters.
+    var constructor = classMirror.declarations.values.firstWhere(
+      (dm) => dm is MethodMirror && dm.isConstructor && dm.parameters.length > 0,
+      orElse: () => null
+    );
+
+    InstanceMirror instanceMirror = null;
+    if (constructor != null) {
+      throw new Exception(
+          "We don't know how to instantiate an object of type ${MirrorSystem.getName(classMirror.simpleName)}"
+      );
+    } else {
+      instanceMirror = classMirror.newInstance(new Symbol(''), []);
+    }
 
     classMirror.instanceMembers.forEach((Symbol symbol, MethodMirror mm) {
 
@@ -120,7 +134,7 @@ class JsonMapper<T> {
 
     return instanceMirror.reflectee;
   }
-  
+
   /**
    * Convert an [object] to a JSON string
    */
