@@ -120,28 +120,12 @@ class JsonMapper<T> {
 
     return instanceMirror.reflectee;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  /**
+   * Convert an [object] to a JSON string
+   */
   Future<String> objectToJson(Object object) {
+
     var completer = new Completer<String>();
 
     var onSuccess = (value) {
@@ -167,7 +151,7 @@ class JsonMapper<T> {
   Future objectToSerializable(Object object, [key=null]) {
     var completer = new Completer();
 
-    if (isPrimitive(object)) {
+    if (_isPrimitive(object)) {
       _serializeNative(object, completer, key);
     } else if (object is Map) {
       _serializeMap(object, completer, key);
@@ -182,7 +166,7 @@ class JsonMapper<T> {
     return completer.future;
   }
 
-  bool isPrimitive(Object object) {
+  bool _isPrimitive(Object object) {
     if (object is num || object is bool || object is String || object == null) {
       return true;
     } else {
@@ -252,7 +236,7 @@ class JsonMapper<T> {
         var instanceMirrorField = instanceMirror.getField(getterKey);
         Object reflectee = instanceMirrorField.reflectee;
         _log("Got reflectee for $getterKey: ${reflectee}");
-        if (isPrimitive(reflectee)) {
+        if (_isPrimitive(reflectee)) {
           resultMap[MirrorSystem.getName(getterKey)] = reflectee;
         } else {
           Future<String> recursed = objectToSerializable(reflectee).catchError((error) {
