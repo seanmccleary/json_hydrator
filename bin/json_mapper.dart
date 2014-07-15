@@ -3,6 +3,7 @@ import "dart:convert";
 import "dart:async";
 
 
+
 void main() {
   Person p = new Person();
   p.name = "Sean";
@@ -85,19 +86,21 @@ class JsonMapper<T> {
 
     // OK, before we can instantiate an object, we need to know if it takes any
     // constructor parameters.
-    var constructor = classMirror.declarations.values.firstWhere(
-      (dm) => dm is MethodMirror && dm.isConstructor && dm.parameters.length > 0,
-      orElse: () => null
+    MethodMirror constructor = classMirror.declarations.values.firstWhere(
+      (dm) => dm is MethodMirror && dm.isConstructor
     );
 
-    InstanceMirror instanceMirror = null;
-    if (constructor != null) {
+    Map constructorParameterValues = [];
+    if (constructor.parameters.length > 0) {
       throw new Exception(
           "We don't know how to instantiate an object of type ${MirrorSystem.getName(classMirror.simpleName)}"
       );
-    } else {
-      instanceMirror = classMirror.newInstance(new Symbol(''), []);
     }
+
+    InstanceMirror instanceMirror = classMirror.newInstance(
+        constructor.constructorName,
+        constructorParameterValues
+    );
 
     classMirror.instanceMembers.forEach((Symbol symbol, MethodMirror mm) {
 
