@@ -11,7 +11,7 @@ void main() {
   p.parent.name = "Tom";
   p.dogs = ["Boris", "Max", "Bella"];
   p.schools = {"Grade": "Jacksonville", "Middle": "Mac", "High": "SMHS"};
-  p.favoriteColor = new Color();
+  p.favoriteColor = new Color(0xff);
   p.favoriteColor.r = 0xff;
   p.parent.favoriteColor = new Color(0, 0xC0);
 
@@ -55,20 +55,34 @@ class Color {
   int b;
 
   Color([this.r = 0, this.g = 0, this.b = 0]);
+
 }
 
+/**
+ * Functionality to map classes of a given type to JSON and back.
+ */
 class JsonMapper<T> {
 
+  /**
+   * Get an object of type T from the [json] string.
+   */
   Future<T> getObject(String json) {
+
     Completer completer = new Completer();
     T object = this._map2Object(JSON.decode(json), T);
     completer.complete(object);
     return completer.future;
+
   }
 
+  /**
+   * Convert a [decoded] Map to an object of a given [type].  This is broken
+   * into a separate method so it can recurse if [decoded] has nested Maps.
+   */
   Object _map2Object(Map decoded, Type type) {
 
     mirrors.ClassMirror classMirror = mirrors.reflectClass(type);
+
     mirrors.InstanceMirror instanceMirror = classMirror.newInstance(new Symbol(''), []);
 
     classMirror.instanceMembers.forEach((mirrors.Symbol symbol, mirrors.MethodMirror mm) {
