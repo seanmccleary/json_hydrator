@@ -1,4 +1,4 @@
-import 'dart:mirrors' as mirrors;
+import 'dart:mirrors';
 import "dart:convert";
 import "dart:async";
 
@@ -81,21 +81,21 @@ class JsonMapper<T> {
    */
   Object _map2Object(Map decoded, Type type) {
 
-    mirrors.ClassMirror classMirror = mirrors.reflectClass(type);
+    ClassMirror classMirror = reflectClass(type);
 
-    mirrors.InstanceMirror instanceMirror = classMirror.newInstance(new Symbol(''), []);
+    InstanceMirror instanceMirror = classMirror.newInstance(new Symbol(''), []);
 
-    classMirror.instanceMembers.forEach((mirrors.Symbol symbol, mirrors.MethodMirror mm) {
+    classMirror.instanceMembers.forEach((Symbol symbol, MethodMirror mm) {
 
       if (mm.isSetter && !mm.isPrivate && !mm.isStatic) {
 
-        String setterName = mirrors.MirrorSystem.getName(symbol);
+        String setterName = MirrorSystem.getName(symbol);
         // Setters have an annoying "=" on the end
         setterName = setterName.substring(0, setterName.length - 1);
 
         if (decoded.containsKey(setterName)) {
 
-          String setterType = mirrors.MirrorSystem.getName(mm.parameters.first.type.simpleName);
+          String setterType = MirrorSystem.getName(mm.parameters.first.type.simpleName);
 
           var setValue = null;
 
@@ -174,7 +174,7 @@ class JsonMapper<T> {
     } else if (object is List) {
       _serializeList(object, completer, key);
     } else {
-      var instanceMirror = mirrors.reflect(object);
+      var instanceMirror = reflect(object);
       _serializeObject(instanceMirror, completer, key);
       // all other processing of regular classes
     }
@@ -236,7 +236,7 @@ class JsonMapper<T> {
     Future.wait(listItemsToComplete).then(onAllItemsComplete, onError:onItemsError);
   }
 
-  void _serializeObject(mirrors.InstanceMirror instanceMirror, Completer completer, key) {
+  void _serializeObject(InstanceMirror instanceMirror, Completer completer, key) {
     _log("object: $instanceMirror");
     var classMirror = instanceMirror.type;
 
@@ -246,20 +246,20 @@ class JsonMapper<T> {
     classMirror.declarations.forEach((getterKey, getter) {
 
 
-      if (getter is mirrors.VariableMirror && !getter.isPrivate && !getter.isStatic) {
+      if (getter is VariableMirror && !getter.isPrivate && !getter.isStatic) {
         _log("getter: ${getter.qualifiedName}");
 
         var instanceMirrorField = instanceMirror.getField(getterKey);
         Object reflectee = instanceMirrorField.reflectee;
         _log("Got reflectee for $getterKey: ${reflectee}");
         if (isPrimitive(reflectee)) {
-          resultMap[mirrors.MirrorSystem.getName(getterKey)] = reflectee;
+          resultMap[MirrorSystem.getName(getterKey)] = reflectee;
         } else {
           Future<String> recursed = objectToSerializable(reflectee).catchError((error) {
             _log("Error: $error");
             completer.completeError(error);
           });
-          recursed.then((json) => resultMap[mirrors.MirrorSystem.getName(getterKey)] = json);
+          recursed.then((json) => resultMap[MirrorSystem.getName(getterKey)] = json);
           futuresList.add(recursed);
         }
 
