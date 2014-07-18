@@ -2,8 +2,6 @@ import 'dart:mirrors';
 import "dart:convert";
 import "dart:async";
 
-
-
 void main() {
   Person p = new Person("Sean", new Color(0xff));
   //p.name = "Sean";
@@ -84,43 +82,59 @@ class JsonMapper<T> {
    */
   Object _map2Object(Map decoded, Type type) {
 
+    // We're going to have to reflect the class to see what it looks like.
     ClassMirror classMirror = reflectClass(type);
 
     // OK, before we can instantiate an object, we need to know if it takes any
     // constructor parameters.
     MethodMirror constructor = classMirror.declarations.values.firstWhere(
-      (dm) => dm is MethodMirror && dm.isConstructor
-    );
+        (dm) => dm is MethodMirror && dm.isConstructor);
+
     List constructorPositionalArguments = new List();
-    if (constructor.parameters.length > 0) {
 
-      // OK, we have to figure out what the parameters to this-a-here constructor are
-      // and try and put them into a Map so we can instantiate 'er
-      constructor.parameters.forEach((ParameterMirror pm) {
-        String parameterName = MirrorSystem.getName(pm.simpleName);
-        if (decoded.containsKey(parameterName)) {
+    // OK, we have to figure out what the parameters to this-a-here constructor
+    // are and try and put them into a Map so we can instantiate 'er
+    constructor.parameters.forEach((ParameterMirror pm) {
 
-          String parameterType = MirrorSystem.getName(pm.type.simpleName);
-          if (
-            _isTypeNamePrimitive(parameterType, decoded[parameterName] is Map, decoded[parameterName] is List)
-          ) {
-            constructorPositionalArguments.add(decoded[parameterName]);
-          } else if (decoded[parameterName] is Map) {
-            constructorPositionalArguments.add(_map2Object(decoded[parameterName], pm.type.reflectedType));
-          } else {
-            throw new Exception("I don't know how to turn '${parameterName}' into an instance of ${parameterType}");
-          }
+      String parameterName = MirrorSystem.getName(pm.simpleName);
 
-          decoded.remove(parameterName);
+      // Does the mapified version of our object contain an attribute with the
+      // same name as one of our constructor arguments?
+      if (decoded.containsKey(parameterName)) {
+
+        String parameterType = MirrorSystem.getName(pm.type.simpleName);
+
+        if (_isTypeNamePrimitive(parameterType, decoded[parameterName] is Map,
+            decoded[parameterName] is List)
+        ) {
+
+          constructorPositionalArguments.add(decoded[parameterName]);
+
+        } else if (decoded[parameterName] is Map) {
+
+          constructorPositionalArguments.add(_map2Object(decoded[parameterName],
+              pm.type.reflectedType));
+
+        } else {
+
+          throw new Exception("I don't know how to turn '${parameterName}' "
+              "into an instance of ${parameterType}"
+          );
+
         }
-      });
-    }
 
+        // Won't be needing this anymore, I reckon.
+        decoded.remove(parameterName);
+      }
+    });
+
+    // Now we should be able to instantiate it.
     InstanceMirror instanceMirror = classMirror.newInstance(
         constructor.constructorName,
         constructorPositionalArguments
     );
 
+    // Now let's populate all the class members we can.
     classMirror.instanceMembers.forEach((Symbol symbol, MethodMirror mm) {
 
       if (mm.isSetter && !mm.isPrivate && !mm.isStatic) {
@@ -131,17 +145,28 @@ class JsonMapper<T> {
 
         if (decoded.containsKey(setterName)) {
 
-          String setterType = MirrorSystem.getName(mm.parameters.first.type.simpleName);
+          String setterType =
+            MirrorSystem.getName(mm.parameters.first.type.simpleName);
 
           var setValue = null;
 
-          if (
-            _isTypeNamePrimitive(setterType, decoded[setterName] is Map, decoded[setterName] is List)
+          if (_isTypeNamePrimitive(setterType, decoded[setterName] is Map,
+              decoded[setterName] is List)
           ) {
+
             setValue = decoded[setterName];
+
           } else if (decoded[setterName] is Map) {
-            setValue = this._map2Object(decoded[setterName], mm.parameters.first.type.reflectedType);
+
+            setValue = this._map2Object(decoded[setterName],
+                mm.parameters.first.type.reflectedType);
+
+          } else {
+
+            throw new Exception("I don't know how to turn ${setterName} into "
+                "an instance of ${setterType}.");
           }
+
           instanceMirror.setField(new Symbol(setterName), setValue);
         }
       }
@@ -150,6 +175,10 @@ class JsonMapper<T> {
     return instanceMirror.reflectee;
   }
 
+  /**
+   * Determine if the name of a type is that of a primitive type.  Optionally
+   * allow "Map" or "List".
+   */
   bool _isTypeNamePrimitive(String typeName, bool isMapOk, bool isListOk) {
     return typeName == 'num'
       || typeName == 'int'
