@@ -5,16 +5,16 @@ import "dart:async";
 
 
 void main() {
-  Person p = new Person();
-  p.name = "Sean";
+  Person p = new Person("Sean", new Color(0xff));
+  //p.name = "Sean";
   p.age = 34;
-  p.parent = new Person();
-  p.parent.name = "Tom";
+  p.parent = new Person("Tom", new Color(0, 0xC0));
+  //p.parent.name = "Tom";
   p.dogs = ["Boris", "Max", "Bella"];
   p.schools = {"Grade": "Jacksonville", "Middle": "Mac", "High": "SMHS"};
-  p.favoriteColor = new Color(0xff);
-  p.favoriteColor.r = 0xff;
-  p.parent.favoriteColor = new Color(0, 0xC0);
+  //p.favoriteColor = new Color(0xff);
+  //p.favoriteColor.r = 0xff;
+  //p.parent.favoriteColor = new Color(0, 0xC0);
 
   var mapper = new JsonMapper<Person>();
 
@@ -48,6 +48,8 @@ class Person extends Object {
   Map<String> schools;
   var something;
   Color favoriteColor;
+
+  Person(this.name, this.favoriteColor);
 }
 
 class Color {
@@ -89,17 +91,34 @@ class JsonMapper<T> {
     MethodMirror constructor = classMirror.declarations.values.firstWhere(
       (dm) => dm is MethodMirror && dm.isConstructor
     );
-
-    Map constructorParameterValues = [];
+    List constructorPositionalArguments = new List();
     if (constructor.parameters.length > 0) {
-      throw new Exception(
-          "We don't know how to instantiate an object of type ${MirrorSystem.getName(classMirror.simpleName)}"
-      );
+
+      // OK, we have to figure out what the parameters to this-a-here constructor are
+      // and try and put them into a Map so we can instantiate 'er
+      constructor.parameters.forEach((ParameterMirror pm) {
+        String parameterName = MirrorSystem.getName(pm.simpleName);
+        if (decoded.containsKey(parameterName)) {
+
+          String parameterType = MirrorSystem.getName(pm.type.simpleName);
+          if (
+            _isTypeNamePrimitive(parameterType, decoded[parameterName] is Map, decoded[parameterName] is List)
+          ) {
+            constructorPositionalArguments.add(decoded[parameterName]);
+          } else if (decoded[parameterName] is Map) {
+            constructorPositionalArguments.add(_map2Object(decoded[parameterName], pm.type.reflectedType));
+          } else {
+            throw new Exception("I don't know how to turn '${parameterName}' into an instance of ${parameterType}");
+          }
+
+          decoded.remove(parameterName);
+        }
+      });
     }
 
     InstanceMirror instanceMirror = classMirror.newInstance(
         constructor.constructorName,
-        constructorParameterValues
+        constructorPositionalArguments
     );
 
     classMirror.instanceMembers.forEach((Symbol symbol, MethodMirror mm) {
@@ -117,14 +136,7 @@ class JsonMapper<T> {
           var setValue = null;
 
           if (
-            setterType == 'num'
-            || setterType == 'int'
-            || setterType == 'double'
-            || setterType == 'bool'
-            || setterType == 'String'
-            || setterType == 'dynamic'
-            || (setterType == 'Map' && decoded[setterName] is Map)
-            || (setterType == 'List' && decoded[setterName] is List)
+            _isTypeNamePrimitive(setterType, decoded[setterName] is Map, decoded[setterName] is List)
           ) {
             setValue = decoded[setterName];
           } else if (decoded[setterName] is Map) {
@@ -136,6 +148,17 @@ class JsonMapper<T> {
     });
 
     return instanceMirror.reflectee;
+  }
+
+  bool _isTypeNamePrimitive(String typeName, bool isMapOk, bool isListOk) {
+    return typeName == 'num'
+      || typeName == 'int'
+      || typeName == 'double'
+      || typeName == 'bool'
+      || typeName == 'String'
+      || typeName == 'dynamic'
+      || (typeName == 'Map' && isMapOk)
+      || (typeName == 'List' && isListOk);
   }
 
   /**
