@@ -115,7 +115,7 @@ class JsonMapper<T> {
           constructorPositionalArguments.add(_map2Object(decoded[parameterName],
               pm.type.reflectedType));
 
-        } else {
+        } else if(decoded[parameterName] != null) {
 
           throw new Exception("I don't know how to turn '${parameterName}' "
               "into an instance of ${parameterType}"
@@ -161,7 +161,7 @@ class JsonMapper<T> {
             setValue = this._map2Object(decoded[setterName],
                 mm.parameters.first.type.reflectedType);
 
-          } else {
+          } else if (decoded[setterName] != null) {
 
             throw new Exception("I don't know how to turn ${setterName} into "
                 "an instance of ${setterType}.");
