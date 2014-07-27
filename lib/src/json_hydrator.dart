@@ -139,16 +139,16 @@ class JsonHydrator<T> {
     var completer = new Completer<String>();
 
     var onSuccess = (value) {
-      _log("About to stringify: $value");
+      _logger.fine("About to stringify: $value");
       var string = JSON.encode(value);
-      _log("...stringified to $string");
+      _logger.fine("...stringified to $string");
       completer.complete(string);
     };
 
     var onError = (error) {
-      _log("JsonObject Future Error: $object");
-      _log("Object: ${object.runtimeType}");
-      _log("Stringified: ${JSON.encode(object)}");
+      _logger.fine("JsonObject Future Error: $object");
+      _logger.fine("Object: ${object.runtimeType}");
+      _logger.fine("Stringified: ${JSON.encode(object)}");
       completer.completeError(error, error.stackTrace);
     };
 
@@ -185,13 +185,13 @@ class JsonHydrator<T> {
   }
 
   void _serializeNative(Object object, Completer completer, key) {
-    _log("native: $object");
+    _logger.fine("native: $object");
     // "native" object types - just complete with that type
     _complete(completer, object, key);
   }
 
   void _serializeMap(Map object, Completer completer, key) {
-    _log("map: $object");
+    _logger.fine("map: $object");
 
     // convert the map into a serialized map
     // each value in the map may itself be a complex object or a "native" type.
@@ -216,7 +216,7 @@ class JsonHydrator<T> {
   }
 
   void _serializeList(List object, Completer completer, key) {
-    _log("list: $object");
+    _logger.fine("list: $object");
 
     // each item in the list will be an object to serialize.
     List<Future> listItemsToComplete = new List<Future>();
@@ -231,7 +231,7 @@ class JsonHydrator<T> {
   }
 
   void _serializeObject(InstanceMirror instanceMirror, Completer completer, key) {
-    _log("object: $instanceMirror");
+    _logger.fine("object: $instanceMirror");
     var classMirror = instanceMirror.type;
 
     var resultMap = new Map();
@@ -241,16 +241,16 @@ class JsonHydrator<T> {
 
 
       if (getter is VariableMirror && !getter.isPrivate && !getter.isStatic) {
-        _log("getter: ${getter.qualifiedName}");
+        _logger.fine("getter: ${getter.qualifiedName}");
 
         var instanceMirrorField = instanceMirror.getField(getterKey);
         Object reflectee = instanceMirrorField.reflectee;
-        _log("Got reflectee for $getterKey: ${reflectee}");
+        _logger.fine("Got reflectee for $getterKey: ${reflectee}");
         if (_isPrimitive(reflectee)) {
           resultMap[MirrorSystem.getName(getterKey)] = reflectee;
         } else {
           Future<String> recursed = objectToSerializable(reflectee).catchError((error) {
-            _log("Error: $error");
+            _logger.fine("Error: $error");
             completer.completeError(error);
           });
           recursed.then((json) => resultMap[MirrorSystem.getName(getterKey)] = json);
@@ -273,9 +273,5 @@ class JsonHydrator<T> {
       completer.complete(object);
       // complete, because we can't reflect any deeper
     }
-  }
-
-  void _log(String message) {
-    //print(message);
   }
 }

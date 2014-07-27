@@ -1,6 +1,9 @@
 import "../lib/json_hydrator.dart";
 
 void main() {
+
+
+
   Person p = new Person("Sean", new Color(0xff));
   //p.name = "Sean";
   p.age = 34;
