@@ -237,28 +237,32 @@ class JsonHydrator<T> {
     var resultMap = new Map();
     var futuresList = new List<Future>();
 
-    classMirror.declarations.forEach((getterKey, getter) {
+    do {
+      classMirror.declarations.forEach((getterKey, getter) {
 
 
-      if (getter is VariableMirror && !getter.isPrivate && !getter.isStatic) {
-        _logger.fine("getter: ${getter.qualifiedName}");
+        if (getter is VariableMirror && !getter.isPrivate && !getter.isStatic) {
+          _logger.fine("getter: ${getter.qualifiedName}");
 
-        var instanceMirrorField = instanceMirror.getField(getterKey);
-        Object reflectee = instanceMirrorField.reflectee;
-        _logger.fine("Got reflectee for $getterKey: ${reflectee}");
-        if (_isPrimitive(reflectee)) {
-          resultMap[MirrorSystem.getName(getterKey)] = reflectee;
-        } else {
-          Future<String> recursed = objectToSerializable(reflectee).catchError((error) {
-            _logger.fine("Error: $error");
-            completer.completeError(error);
-          });
-          recursed.then((json) => resultMap[MirrorSystem.getName(getterKey)] = json);
-          futuresList.add(recursed);
+          var instanceMirrorField = instanceMirror.getField(getterKey);
+          Object reflectee = instanceMirrorField.reflectee;
+          _logger.fine("Got reflectee for $getterKey: ${reflectee}");
+          if (_isPrimitive(reflectee)) {
+            resultMap[MirrorSystem.getName(getterKey)] = reflectee;
+          } else {
+            Future<String> recursed = objectToSerializable(reflectee).catchError((error) {
+              _logger.fine("Error: $error");
+              completer.completeError(error);
+            });
+            recursed.then((json) => resultMap[MirrorSystem.getName(getterKey)] = json);
+            futuresList.add(recursed);
+          }
+
         }
+      });
 
-      }
-    });
+      classMirror = classMirror.superclass;
+    } while(classMirror != null);
 
     Future.wait(futuresList).then((vals) {
       _complete(completer, resultMap, key);

@@ -9,21 +9,41 @@ void main() {
   p.dogs = ["Boris", "Max", "Bella"];
   p.schools = {"Grade": "Jacksonville", "Middle": "Mac", "High": "SMHS"};
 
-  String json = '{"name":"Sean","age":34,"something":null,"favoriteColor":{"r":255,"g":0,"b":0},"dogs":["Boris","Max","Bella"],"schools":{"Grade":"Jacksonville","Middle":"Mac","High":"SMHS"},"parent":{"name":"Tom","age":null,"parent":null,"dogs":null,"schools":null,"something":null,"favoriteColor":{"r":0,"g":192,"b":0}}}';
+  String personJson = '{"name":"Sean","age":34,"something":null,"favoriteColor":{"r":255,"g":0,"b":0},"dogs":["Boris","Max","Bella"],"schools":{"Grade":"Jacksonville","Middle":"Mac","High":"SMHS"},"parent":{"name":"Tom","age":null,"parent":null,"dogs":null,"schools":null,"something":null,"favoriteColor":{"r":0,"g":192,"b":0}}}';
 
-  var mapper = new JsonHydrator<Person>();
+  Humanzee h = new Humanzee("Earl", new Color(0xff), new Color(0x0f));
+  h.age = 15;
+  h.parent = p;
+  h.id = "123ABC";
+
+  String humanzeeJson = '{"id":"123ABC","name":"Earl","age":15,"dogs":null,"schools":null,"something":null,"furColor":{"r":15,"g":0,"b":0},"favoriteColor":{"r":255,"g":0,"b":0},"parent":{"name":"Sean","age":34,"something":null,"favoriteColor":{"r":255,"g":0,"b":0},"dogs":["Boris","Max","Bella"],"schools":{"Grade":"Jacksonville","Middle":"Mac","High":"SMHS"},"parent":{"name":"Tom","age":null,"parent":null,"dogs":null,"schools":null,"something":null,"favoriteColor":{"r":0,"g":192,"b":0}}}}';
+
+  var humanMapper = new JsonHydrator<Person>();
+  var humanzeeMapper = new JsonHydrator<Humanzee>();
 
   // Convert the object to JSON
   test("objectToJson", () {
-    var future = mapper.objectToJson(p);
-    expect(future, completion(equals(json)));
+    var future = humanMapper.objectToJson(p);
+    expect(future, completion(equals(personJson)));
   });
 
-  // Conver tthe JSON to an object, then back to JSON for testing
+  // Make sure it works with subclasses
+  test("subclassToJson", () {
+    var future = humanzeeMapper.objectToJson(h);
+    expect(future, completion(equals(humanzeeJson)));
+  });
+
+  // Convert the JSON to an object, then back to JSON for testing
   test("getObject", () {
-    var future = mapper.getObject(json)
-      .then((p) => mapper.objectToJson(p));
-    expect(future, completion(equals(json)));
+    var future = humanMapper.getObject(personJson)
+      .then((p) => humanMapper.objectToJson(p));
+    expect(future, completion(equals(personJson)));
+  });
+
+  test("getSubclassObject", () {
+    var future = humanzeeMapper.getObject(humanzeeJson)
+      .then((h) => humanMapper.objectToJson(h));
+    expect(future, completion(equals(humanzeeJson)));
   });
 
 }
@@ -38,6 +58,15 @@ class Person extends Object {
   Color favoriteColor;
 
   Person(this.name, this.favoriteColor);
+}
+
+class Humanzee extends Person with Entity {
+  Color furColor;
+
+  Humanzee(name, favoriteColor, this.furColor) : super(name, favoriteColor);
+}
+abstract class Entity {
+  String id;
 }
 
 class Color {
