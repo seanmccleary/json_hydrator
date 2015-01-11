@@ -1,14 +1,45 @@
-dart json hydrator
+# dart json hydrator
 
 This is a tool for turning objects into JSON and back again.
 
 It is based on code from Chris Buckett's JsonObject package, which you can find at
 https://github.com/chrisbu/dartwatch-JsonObject
 
-I created it because I wanted a way to hydrate objects from JSON without
+I created it because I wanted a way to truly hydrate PODO objects from JSON without
 relying on noSuchMethod.
 
-It's probably not a speed demon.  It's a work in progress.  IF anyone wants
+It's probably not a speed demon.  It's a work in progress.  If anyone wants
 to contribute, they'd be my pal.
 
-See the test case for an example of how to use it.
+## Examples
+
+### Converting a PODO to JSON
+
+```
+
+// This is the class we'll be using
+class Person extends Object {
+  String name;
+  int age;
+  Person parent;
+  List<String> dogs;
+  Map<String> schools;
+  var something;
+  Color favoriteColor;
+
+  Person(this.name, this.favoriteColor);
+}
+
+// Now instantiate a person
+Person p = new Person("Sean", new Color(0xff));
+p.age = 34;
+p.parent = new Person("Tom", new Color(0, 0xC0));
+p.dogs = ["Boris", "Max", "Bella"];
+p.schools = {"Grade": "Jacksonville", "Middle": "Mac", "High": "SMHS"};
+
+// Create a mapper for that type
+var humanMapper = new JsonHydrator<Person>();
+
+humanMapper.objectToJson(p)).then((json) => print(json));
+
+```
