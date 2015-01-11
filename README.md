@@ -43,3 +43,8 @@ var humanMapper = new JsonHydrator<Person>();
 humanMapper.objectToJson(p)).then((json) => print(json));
 
 ```
+
+### Converting JSON to a PDO
+```
+humanMapper.getObject(personJson).then((p) => doSomethingWithPerson(p));
+```
