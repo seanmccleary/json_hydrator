@@ -4,6 +4,12 @@ import 'package:source_gen/source_gen.dart';
 
 /// A generator to create classes which map objects to JSON.
 class JsonMapperGenerator extends Generator {
+
+  final RegExp _trimObjName = new RegExp(r'^[^\.]+\.');
+  final RegExp _trimAfterBracket = new RegExp(r'\[.+$');
+  final RegExp _listTypeRegExp = new RegExp(r"^List<(.+)>$");
+  final RegExp _mapTypeRegExp = new RegExp(r"^Map<(.+)>$");
+
   @override
   Future<String> generate(Element element, _) async {
     if (element is! ClassElement) {
@@ -91,10 +97,8 @@ class JsonMapperGenerator extends Generator {
     else if (_isTypeNameList(returnTypeName)) {
       final String listType = _getListType(returnTypeName);
 
-      final RegExp trimObjName = new RegExp(r'^[^\.]+\.');
-      final RegExp trimAfterBracket = new RegExp(r'\[.+$');
       final String propertyNameCounter =
-          "${propertyName.replaceAll(trimObjName, "").replaceAll(trimAfterBracket, "")}Counter$nestingLevel";
+          "${propertyName.replaceAll(_trimObjName, "").replaceAll(_trimAfterBracket, "")}Counter$nestingLevel";
 
       generatedCode.write("""
         // ignore: cascade_invocations
@@ -110,12 +114,10 @@ class JsonMapperGenerator extends Generator {
 
     // Is it a Map?
     else if (_isTypeNameMap(returnTypeName)) {
-      final RegExp trimObjName = new RegExp(r'^[^\.]+\.');
-      final RegExp trimAfterBracket = new RegExp(r'\[.+$');
       final String keysArrayName =
-          "${propertyName.replaceAll(trimObjName, "").replaceAll(trimAfterBracket, "")}Keys$nestingLevel";
+          "${propertyName.replaceAll(_trimObjName, "").replaceAll(_trimAfterBracket, "")}Keys$nestingLevel";
       final String keysArrayCounter =
-          "${propertyName.replaceAll(trimObjName, "").replaceAll(trimAfterBracket, "")}Counter$nestingLevel";
+          "${propertyName.replaceAll(_trimObjName, "").replaceAll(_trimAfterBracket, "")}Counter$nestingLevel";
       final KeyValuePairTypes keyValuePairTypes = _getMapTypes(returnTypeName);
 
       generatedCode.write("""
@@ -180,25 +182,18 @@ class JsonMapperGenerator extends Generator {
   /// TODO: Support subclasses of [List].
   /// There seem to be several ways to do this, according to this:
   /// http://stackoverflow.com/questions/16247045/how-do-i-extend-a-list-in-dart
-  bool _isTypeNameList(String typeName) {
-    final RegExp regExp = new RegExp(r"^List<(.+)>$");
-    return regExp.hasMatch(typeName);
-  }
+  bool _isTypeNameList(String typeName) => _listTypeRegExp.hasMatch(typeName);
 
   /// Gets the type of a List
   ///
   /// i.e. List<int> returns "int"
-  String _getListType(String typeName) {
-    final RegExp regExp = new RegExp(r"^List<(.+)>$");
-    return regExp.firstMatch(typeName).group(1);
-  }
+  String _getListType(String typeName) =>_listTypeRegExp.firstMatch(typeName).group(1);
 
   /// Gets thet types of a Map
   ///
   /// i.e. Map<int, String> returns new KeyValuePairTypes("int", "String");
   KeyValuePairTypes _getMapTypes(String fullTypeName) {
-    final RegExp regExp = new RegExp(r"^Map<(.+)>$");
-    final String typeName = regExp.firstMatch(fullTypeName).group(1);
+    final String typeName = _mapTypeRegExp.firstMatch(fullTypeName).group(1);
 
     final StringBuffer keyTypeStringBuffer = new StringBuffer();
     final StringBuffer valueTypeStringBuffer = new StringBuffer();
@@ -227,10 +222,7 @@ class JsonMapperGenerator extends Generator {
   /// Determines whether or not a DartType name represents a Map.
   ///
   /// TODO: Support sublcasses of [Map].
-  bool _isTypeNameMap(String typeName) {
-    final RegExp regExp = new RegExp("Map(<[^>]+>)?");
-    return regExp.hasMatch(typeName);
-  }
+  bool _isTypeNameMap(String typeName) => _mapTypeRegExp.hasMatch(typeName);
 
   /// Determines whether or not a DartType name respresents a DateTime
   ///
