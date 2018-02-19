@@ -4,13 +4,13 @@ part of json_hydrator.test;
 
 // **************************************************************************
 // Generator: JsonMapperGenerator
-// Target: class TestOuterClass
+// Target: class _TestOuterClass
 // **************************************************************************
 
 // ignore_for_file: cascade_invocations
 
-/// Maps an object of type TestOuterClass to JSON
-String testOuterClassToJson(TestOuterClass obj) {
+/// Maps an object of type _TestOuterClass to JSON
+String _testOuterClassToJson(_TestOuterClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
   stringBuffer.write('{');
   stringBuffer.write('"aString":');
@@ -233,20 +233,20 @@ String testOuterClassToJson(TestOuterClass obj) {
   stringBuffer.write('${obj.aBoolFalse}');
   stringBuffer.write(',');
   stringBuffer.write('"anInnerClass":');
-  stringBuffer.write(testInnerClassToJson(obj.anInnerClass));
+  stringBuffer.write(_testInnerClassToJson(obj.anInnerClass));
   stringBuffer.write('}');
   return stringBuffer.toString();
 }
 
 // **************************************************************************
 // Generator: JsonMapperGenerator
-// Target: class TestInnerClass
+// Target: class _TestInnerClass
 // **************************************************************************
 
 // ignore_for_file: cascade_invocations
 
-/// Maps an object of type TestInnerClass to JSON
-String testInnerClassToJson(TestInnerClass obj) {
+/// Maps an object of type _TestInnerClass to JSON
+String _testInnerClassToJson(_TestInnerClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
   stringBuffer.write('{');
   stringBuffer.write('"anInnerString":');

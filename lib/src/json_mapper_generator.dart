@@ -9,6 +9,7 @@ class JsonMapperGenerator extends Generator {
   final RegExp _trimAfterBracket = new RegExp(r'\[.+$');
   final RegExp _listTypeRegExp = new RegExp(r"^List<(.+)>$");
   final RegExp _mapTypeRegExp = new RegExp(r"^Map<(.+)>$");
+  final RegExp _singleLetter = new RegExp("[A-Za-z]");
 
   @override
   Future<String> generate(Element element, _) async {
@@ -17,8 +18,7 @@ class JsonMapperGenerator extends Generator {
     }
 
     final String className = element.displayName;
-    final String toJsonFunctionName =
-        "${className[0].toLowerCase()}${className.substring(1)}ToJson";
+    final String toJsonFunctionName = _getMappingFunctionName(className);
 
     // Generate the toJson method
     final String generatedCode = """
@@ -131,8 +131,7 @@ class JsonMapperGenerator extends Generator {
     // Is it an object?
     else {
       final String innerClassName = returnTypeName;
-      final String innerToJsonFunctionName =
-          "${innerClassName[0].toLowerCase()}${innerClassName.substring(1)}ToJson";
+      final String innerToJsonFunctionName = _getMappingFunctionName(innerClassName);
       generatedCode.write("stringBuffer.write($innerToJsonFunctionName($propertyName));");
     }
 
@@ -209,6 +208,10 @@ class JsonMapperGenerator extends Generator {
   ///
   /// TODO: Support subclasses of [DateTime]
   bool _isTypeNameDateTime(String typeName) => typeName == "DateTime";
+
+  String _getMappingFunctionName(String className) {
+    return "${className.replaceFirstMapped(_singleLetter, (Match m) => m.group(0).toLowerCase())}ToJson";
+  }
 }
 
 /// A pair of types use for the keys and values of a Map

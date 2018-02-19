@@ -7,7 +7,7 @@ part "json_hydrator_test.g.dart";
 void main() {
   group('A group of tests', () {
     test('To JSON', () {
-      final TestInnerClass testInnerClass = new TestInnerClass()
+      final _TestInnerClass testInnerClass = new _TestInnerClass()
         ..anInnerString = "That's \"that\""
         ..anInnerNum = 11
         ..anInnerInt = 21
@@ -15,7 +15,7 @@ void main() {
         ..anInnerIntList = <int>[10, 20, 30]
         ..anInnerDateTime = new DateTime(1979, 12, 20, 01, 02, 03, 04, 05);
 
-      final TestOuterClass testOuterClass = new TestOuterClass()
+      final _TestOuterClass testOuterClass = new _TestOuterClass()
         ..aNum = 10
         ..anInt = 20
         ..aDouble = 1.23
@@ -48,7 +48,7 @@ void main() {
         ..aDateTime = new DateTime(2017, 3, 3, 22, 41, 1, 2, 3)
         ..anInnerClass = testInnerClass;
 
-      final String json = testOuterClassToJson(testOuterClass);
+      final String json = _testOuterClassToJson(testOuterClass);
       expect(
           json,
           equals(
@@ -57,60 +57,33 @@ void main() {
   });
 }
 
-// ignore: public_member_api_docs
-class TestOuterClass {
-  // ignore: public_member_api_docs
+class _TestOuterClass {
   String aString;
-  // ignore: public_member_api_docs
   num aNum;
-  // ignore: public_member_api_docs
   int anInt;
-  // ignore: public_member_api_docs
   double aDouble;
-  // ignore: public_member_api_docs
   List<int> anIntList = <int>[];
-  // ignore: public_member_api_docs
   List<String> aStringList = <String>[];
-  // ignore: public_member_api_docs
   List<List<int>> numberList = <List<int>>[];
-  // ignore: public_member_api_docs
   List<List<List<String>>> drinkList = <List<List<String>>>[];
-  // ignore: public_member_api_docs
   Map<String, int> aStringIntMap = <String, int>{};
-  // ignore: public_member_api_docs
   Map<int, String> anIntStringMap = <int, String>{};
-  // ignore: public_member_api_docs
   Map<int, Map<String, String>> aMapOfMaps = <int, Map<String, String>>{};
-  // ignore: public_member_api_docs
   DateTime aDateTime;
-  // ignore: public_member_api_docs
   String aNullString;
-  // ignore: public_member_api_docs
   int aNullInt;
-  // ignore: public_member_api_docs
   bool aBoolTrue = true;
-  // ignore: public_member_api_docs
   bool aBoolFalse = false;
-  // ignore: public_member_api_docs
-  TestInnerClass anInnerClass;
+  _TestInnerClass anInnerClass;
 }
 
-// ignore: public_member_api_docs
-class TestInnerClass {
-  // ignore: public_member_api_docs
+class _TestInnerClass {
   String anInnerString;
-  // ignore: public_member_api_docs
   num anInnerNum;
-  // ignore: public_member_api_docs
   int anInnerInt;
-  // ignore: public_member_api_docs
   double anInnerDouble;
-  // ignore: public_member_api_docs
   List<int> anInnerIntList = <int>[];
-  // ignore: public_member_api_docs
   Map<String, int> anInnerStringIntMap = <String, int>{};
-  // ignore: public_member_api_docs
   Map<int, String> anInnerIntStringMap = <int, String>{};
-  // ignore: public_member_api_docs
   DateTime anInnerDateTime;
 }
