@@ -25,7 +25,7 @@ class JsonMapperGenerator extends Generator {
       /// Maps an object of type $className to JSON
       String $toJsonFunctionName($className obj) {
         final StringBuffer stringBuffer = new StringBuffer();
-        ${_generateToJsonFunction(element)}
+        ${_generateToJsonFunction(element as ClassElement)}
         return stringBuffer.toString();
       }""";
 
