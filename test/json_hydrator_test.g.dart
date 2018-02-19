@@ -12,35 +12,35 @@ part of json_hydrator.test;
 /// Maps an object of type TestOuterClass to JSON
 String testOuterClassToJson(TestOuterClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
-  stringBuffer.write("{");
+  stringBuffer.write('{');
   stringBuffer.write('"aString":');
   if (obj.aString == null) {
     stringBuffer.write('null');
   } else {
     stringBuffer.write('"${obj.aString.toString().replaceAll('"', '\\"')}"');
   }
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aNum":');
-  stringBuffer.write("${obj.aNum}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.aNum}');
+  stringBuffer.write(',');
   stringBuffer.write('"anInt":');
-  stringBuffer.write("${obj.anInt}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.anInt}');
+  stringBuffer.write(',');
   stringBuffer.write('"aDouble":');
-  stringBuffer.write("${obj.aDouble}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.aDouble}');
+  stringBuffer.write(',');
   stringBuffer.write('"anIntList":');
   stringBuffer.write('[');
   for (int anIntListCounter1 = 0;
       anIntListCounter1 < obj.anIntList.length;
       anIntListCounter1++) {
-    stringBuffer.write("${obj.anIntList[anIntListCounter1]}");
+    stringBuffer.write('${obj.anIntList[anIntListCounter1]}');
     if (anIntListCounter1 != obj.anIntList.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write(']');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aStringList":');
   stringBuffer.write('[');
   for (int aStringListCounter1 = 0;
@@ -53,11 +53,11 @@ String testOuterClassToJson(TestOuterClass obj) {
           '"${obj.aStringList[aStringListCounter1].toString().replaceAll('"', '\\"')}"');
     }
     if (aStringListCounter1 != obj.aStringList.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write(']');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"numberList":');
   stringBuffer.write('[');
   for (int numberListCounter1 = 0;
@@ -68,18 +68,18 @@ String testOuterClassToJson(TestOuterClass obj) {
         numberListCounter2 < obj.numberList[numberListCounter1].length;
         numberListCounter2++) {
       stringBuffer
-          .write("${obj.numberList[numberListCounter1][numberListCounter2]}");
+          .write('${obj.numberList[numberListCounter1][numberListCounter2]}');
       if (numberListCounter2 != obj.numberList[numberListCounter1].length - 1) {
-        stringBuffer.write(",");
+        stringBuffer.write(',');
       }
     }
     stringBuffer.write(']');
     if (numberListCounter1 != obj.numberList.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write(']');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"drinkList":');
   stringBuffer.write('[');
   for (int drinkListCounter1 = 0;
@@ -104,21 +104,21 @@ String testOuterClassToJson(TestOuterClass obj) {
         }
         if (drinkListCounter3 !=
             obj.drinkList[drinkListCounter1][drinkListCounter2].length - 1) {
-          stringBuffer.write(",");
+          stringBuffer.write(',');
         }
       }
       stringBuffer.write(']');
       if (drinkListCounter2 != obj.drinkList[drinkListCounter1].length - 1) {
-        stringBuffer.write(",");
+        stringBuffer.write(',');
       }
     }
     stringBuffer.write(']');
     if (drinkListCounter1 != obj.drinkList.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write(']');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aStringIntMap":');
   final List<String> aStringIntMapKeys1 = obj.aStringIntMap.keys.toList();
   stringBuffer.write('{');
@@ -133,13 +133,13 @@ String testOuterClassToJson(TestOuterClass obj) {
     }
     stringBuffer.write(':');
     stringBuffer.write(
-        "${obj.aStringIntMap[aStringIntMapKeys1[aStringIntMapCounter1]]}");
+        '${obj.aStringIntMap[aStringIntMapKeys1[aStringIntMapCounter1]]}');
     if (aStringIntMapCounter1 != obj.aStringIntMap.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write('}');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"anIntStringMap":');
   final List<int> anIntStringMapKeys1 = obj.anIntStringMap.keys.toList();
   stringBuffer.write('{');
@@ -161,11 +161,11 @@ String testOuterClassToJson(TestOuterClass obj) {
           '"${obj.anIntStringMap[anIntStringMapKeys1[anIntStringMapCounter1]].toString().replaceAll('"', '\\"')}"');
     }
     if (anIntStringMapCounter1 != obj.anIntStringMap.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write('}');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aMapOfMaps":');
   final List<int> aMapOfMapsKeys1 = obj.aMapOfMaps.keys.toList();
   stringBuffer.write('{');
@@ -202,19 +202,19 @@ String testOuterClassToJson(TestOuterClass obj) {
       }
       if (aMapOfMapsCounter2 !=
           obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]].length - 1) {
-        stringBuffer.write(",");
+        stringBuffer.write(',');
       }
     }
     stringBuffer.write('}');
     if (aMapOfMapsCounter1 != obj.aMapOfMaps.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write('}');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aDateTime":');
   stringBuffer.write('"${obj.aDateTime.toUtc().toIso8601String()}"');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aNullString":');
   if (obj.aNullString == null) {
     stringBuffer.write('null');
@@ -222,19 +222,19 @@ String testOuterClassToJson(TestOuterClass obj) {
     stringBuffer
         .write('"${obj.aNullString.toString().replaceAll('"', '\\"')}"');
   }
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"aNullInt":');
-  stringBuffer.write("${obj.aNullInt}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.aNullInt}');
+  stringBuffer.write(',');
   stringBuffer.write('"aBoolTrue":');
-  stringBuffer.write("${obj.aBoolTrue}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.aBoolTrue}');
+  stringBuffer.write(',');
   stringBuffer.write('"aBoolFalse":');
-  stringBuffer.write("${obj.aBoolFalse}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.aBoolFalse}');
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerClass":');
   stringBuffer.write(testInnerClassToJson(obj.anInnerClass));
-  stringBuffer.write("}");
+  stringBuffer.write('}');
   return stringBuffer.toString();
 }
 
@@ -248,7 +248,7 @@ String testOuterClassToJson(TestOuterClass obj) {
 /// Maps an object of type TestInnerClass to JSON
 String testInnerClassToJson(TestInnerClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
-  stringBuffer.write("{");
+  stringBuffer.write('{');
   stringBuffer.write('"anInnerString":');
   if (obj.anInnerString == null) {
     stringBuffer.write('null');
@@ -256,28 +256,28 @@ String testInnerClassToJson(TestInnerClass obj) {
     stringBuffer
         .write('"${obj.anInnerString.toString().replaceAll('"', '\\"')}"');
   }
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerNum":');
-  stringBuffer.write("${obj.anInnerNum}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.anInnerNum}');
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerInt":');
-  stringBuffer.write("${obj.anInnerInt}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.anInnerInt}');
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerDouble":');
-  stringBuffer.write("${obj.anInnerDouble}");
-  stringBuffer.write(",");
+  stringBuffer.write('${obj.anInnerDouble}');
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerIntList":');
   stringBuffer.write('[');
   for (int anInnerIntListCounter1 = 0;
       anInnerIntListCounter1 < obj.anInnerIntList.length;
       anInnerIntListCounter1++) {
-    stringBuffer.write("${obj.anInnerIntList[anInnerIntListCounter1]}");
+    stringBuffer.write('${obj.anInnerIntList[anInnerIntListCounter1]}');
     if (anInnerIntListCounter1 != obj.anInnerIntList.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write(']');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerStringIntMap":');
   final List<String> anInnerStringIntMapKeys1 =
       obj.anInnerStringIntMap.keys.toList();
@@ -293,13 +293,13 @@ String testInnerClassToJson(TestInnerClass obj) {
     }
     stringBuffer.write(':');
     stringBuffer.write(
-        "${obj.anInnerStringIntMap[anInnerStringIntMapKeys1[anInnerStringIntMapCounter1]]}");
+        '${obj.anInnerStringIntMap[anInnerStringIntMapKeys1[anInnerStringIntMapCounter1]]}');
     if (anInnerStringIntMapCounter1 != obj.anInnerStringIntMap.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write('}');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerIntStringMap":');
   final List<int> anInnerIntStringMapKeys1 =
       obj.anInnerIntStringMap.keys.toList();
@@ -323,13 +323,13 @@ String testInnerClassToJson(TestInnerClass obj) {
           '"${obj.anInnerIntStringMap[anInnerIntStringMapKeys1[anInnerIntStringMapCounter1]].toString().replaceAll('"', '\\"')}"');
     }
     if (anInnerIntStringMapCounter1 != obj.anInnerIntStringMap.length - 1) {
-      stringBuffer.write(",");
+      stringBuffer.write(',');
     }
   }
   stringBuffer.write('}');
-  stringBuffer.write(",");
+  stringBuffer.write(',');
   stringBuffer.write('"anInnerDateTime":');
   stringBuffer.write('"${obj.anInnerDateTime.toUtc().toIso8601String()}"');
-  stringBuffer.write("}");
+  stringBuffer.write('}');
   return stringBuffer.toString();
 }

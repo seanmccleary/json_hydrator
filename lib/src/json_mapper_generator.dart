@@ -37,7 +37,7 @@ class JsonMapperGenerator extends Generator {
   /// Create the function to convert an object to JSON
   String _generateToJsonFunction(ClassElement classElement) {
     final StringBuffer generatedCode =
-        new StringBuffer('stringBuffer.write("{");');
+        new StringBuffer("stringBuffer.write('{');");
 
     final List<PropertyAccessorElement> properties = classElement.accessors
         .where((PropertyAccessorElement property) =>
@@ -53,11 +53,11 @@ class JsonMapperGenerator extends Generator {
             property.returnType.displayName, "obj.${property.displayName}"));
 
       if (count != properties.length - 1) {
-        generatedCode.write('stringBuffer.write(",");');
+        generatedCode.write("stringBuffer.write(',');");
       }
     }
 
-    generatedCode.write('stringBuffer.write("}");');
+    generatedCode.write("stringBuffer.write('}');");
     return generatedCode.toString();
   }
 
@@ -80,7 +80,7 @@ class JsonMapperGenerator extends Generator {
     // Is it a number or a bool?  If so just print it.
     else if (_isTypeNameNum(returnTypeName) ||
         _isTypeNameBool(returnTypeName)) {
-      generatedCode.write('stringBuffer.write("\${$propertyName}");');
+      generatedCode.write("stringBuffer.write('\${$propertyName}');");
     }
 
     // Is it a List?
@@ -95,7 +95,7 @@ class JsonMapperGenerator extends Generator {
         for (int $propertyNameCounter = 0; $propertyNameCounter < $propertyName.length; $propertyNameCounter++) {
           ${_getCodeSnippetForElementValue(listType, "$propertyName[$propertyNameCounter]", nestingLevel: nestingLevel + 1)}
           if ($propertyNameCounter != $propertyName.length - 1) {
-            stringBuffer.write(",");
+            stringBuffer.write(',');
           }
         }
         stringBuffer.write(']');""");
@@ -117,7 +117,7 @@ class JsonMapperGenerator extends Generator {
           stringBuffer.write(':');
           ${_getCodeSnippetForElementValue(keyValuePairTypes.valueType, "$propertyName[$keysArrayName[$keysArrayCounter]]", nestingLevel: nestingLevel + 1)}
           if ($keysArrayCounter != $propertyName.length - 1) {
-            stringBuffer.write(",");
+            stringBuffer.write(',');
           }
         }
         stringBuffer.write('}');""");
