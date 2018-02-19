@@ -22,6 +22,8 @@ class JsonMapperGenerator extends Generator {
 
     // Generate the toJson method
     final String generatedCode = """
+      // ignore_for_file: cascade_invocations
+
       /// Maps an object of type $className to JSON
       String $toJsonFunctionName($className obj) {
         final StringBuffer stringBuffer = new StringBuffer();
@@ -46,25 +48,16 @@ class JsonMapperGenerator extends Generator {
       final PropertyAccessorElement property = properties[count];
 
       generatedCode
-        ..write("""
-          // ignore: cascade_invocations
-          stringBuffer.write('\"${property.displayName}\":');
-        """)
+        ..write("stringBuffer.write('\"${property.displayName}\":');")
         ..write(_getCodeSnippetForElementValue(
             property.returnType.displayName, "obj.${property.displayName}"));
 
       if (count != properties.length - 1) {
-        generatedCode.write("""
-          // ignore: cascade_invocations
-          stringBuffer.write(",");
-        """);
+        generatedCode.write('stringBuffer.write(",");');
       }
     }
 
-    generatedCode.write("""
-      // ignore: cascade_invocations
-      stringBuffer.write("}");
-    """);
+    generatedCode.write('stringBuffer.write("}");');
     return generatedCode.toString();
   }
 
@@ -87,10 +80,7 @@ class JsonMapperGenerator extends Generator {
     // Is it a number or a bool?  If so just print it.
     else if (_isTypeNameNum(returnTypeName) ||
         _isTypeNameBool(returnTypeName)) {
-      generatedCode.write("""
-        // ignore: cascade_invocations
-        stringBuffer.write("\${$propertyName}");
-      """);
+      generatedCode.write('stringBuffer.write("\${$propertyName}");');
     }
 
     // Is it a List?
@@ -101,7 +91,6 @@ class JsonMapperGenerator extends Generator {
           "${propertyName.replaceAll(_trimObjName, "").replaceAll(_trimAfterBracket, "")}Counter$nestingLevel";
 
       generatedCode.write("""
-        // ignore: cascade_invocations
         stringBuffer.write('[');
         for (int $propertyNameCounter = 0; $propertyNameCounter < $propertyName.length; $propertyNameCounter++) {
           ${_getCodeSnippetForElementValue(listType, "$propertyName[$propertyNameCounter]", nestingLevel: nestingLevel + 1)}
@@ -125,11 +114,9 @@ class JsonMapperGenerator extends Generator {
         stringBuffer.write('{');
         for (int $keysArrayCounter = 0; $keysArrayCounter < $keysArrayName.length; $keysArrayCounter++) {
           ${_getCodeSnippetForElementValue(keyValuePairTypes.keyType, "$keysArrayName[$keysArrayCounter]", nestingLevel: nestingLevel + 1, treatAsString: true)}
-          // ignore: cascade_invocations
           stringBuffer.write(':');
           ${_getCodeSnippetForElementValue(keyValuePairTypes.valueType, "$propertyName[$keysArrayName[$keysArrayCounter]]", nestingLevel: nestingLevel + 1)}
           if ($keysArrayCounter != $propertyName.length - 1) {
-            // ignore: cascade_invocations
             stringBuffer.write(",");
           }
         }
@@ -138,10 +125,7 @@ class JsonMapperGenerator extends Generator {
 
     // Is it a DateTime?  If so make it an ISO8601 string.
     else if (_isTypeNameDateTime(returnTypeName)) {
-      generatedCode.write("""
-        // ignore: cascade_invocations
-        stringBuffer.write('\"\${$propertyName.toUtc().toIso8601String()}\"');
-      """);
+      generatedCode.write("stringBuffer.write('\"\${$propertyName.toUtc().toIso8601String()}\"');");
     }
 
     // Is it an object?
@@ -149,10 +133,7 @@ class JsonMapperGenerator extends Generator {
       final String innerClassName = returnTypeName;
       final String innerToJsonFunctionName =
           "${innerClassName[0].toLowerCase()}${innerClassName.substring(1)}ToJson";
-      generatedCode.write("""
-        // ignore: cascade_invocations
-        stringBuffer.write($innerToJsonFunctionName($propertyName));
-      """);
+      generatedCode.write("stringBuffer.write($innerToJsonFunctionName($propertyName));");
     }
 
     return generatedCode.toString();

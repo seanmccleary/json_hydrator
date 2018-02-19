@@ -7,54 +7,41 @@ part of json_hydrator.test;
 // Target: class TestOuterClass
 // **************************************************************************
 
+// ignore_for_file: cascade_invocations
+
 /// Maps an object of type TestOuterClass to JSON
 String testOuterClassToJson(TestOuterClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
-  stringBuffer.write("{"); // ignore: cascade_invocations
+  stringBuffer.write("{");
   stringBuffer.write('"aString":');
   if (obj.aString == null) {
     stringBuffer.write('null');
   } else {
     stringBuffer.write('"${obj.aString.toString().replaceAll('"', '\\"')}"');
-  } // ignore: cascade_invocations
+  }
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aNum":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.aNum}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInt":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.anInt}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aDouble":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.aDouble}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anIntList":');
-  // ignore: cascade_invocations
   stringBuffer.write('[');
   for (int anIntListCounter1 = 0;
       anIntListCounter1 < obj.anIntList.length;
       anIntListCounter1++) {
-    // ignore: cascade_invocations
     stringBuffer.write("${obj.anIntList[anIntListCounter1]}");
-
     if (anIntListCounter1 != obj.anIntList.length - 1) {
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write(']'); // ignore: cascade_invocations
+  stringBuffer.write(']');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aStringList":');
-  // ignore: cascade_invocations
   stringBuffer.write('[');
   for (int aStringListCounter1 = 0;
       aStringListCounter1 < obj.aStringList.length;
@@ -69,24 +56,19 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write(']'); // ignore: cascade_invocations
+  stringBuffer.write(']');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"numberList":');
-  // ignore: cascade_invocations
   stringBuffer.write('[');
   for (int numberListCounter1 = 0;
       numberListCounter1 < obj.numberList.length;
       numberListCounter1++) {
-    // ignore: cascade_invocations
     stringBuffer.write('[');
     for (int numberListCounter2 = 0;
         numberListCounter2 < obj.numberList[numberListCounter1].length;
         numberListCounter2++) {
-      // ignore: cascade_invocations
       stringBuffer
           .write("${obj.numberList[numberListCounter1][numberListCounter2]}");
-
       if (numberListCounter2 != obj.numberList[numberListCounter1].length - 1) {
         stringBuffer.write(",");
       }
@@ -96,21 +78,17 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write(']'); // ignore: cascade_invocations
+  stringBuffer.write(']');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"drinkList":');
-  // ignore: cascade_invocations
   stringBuffer.write('[');
   for (int drinkListCounter1 = 0;
       drinkListCounter1 < obj.drinkList.length;
       drinkListCounter1++) {
-    // ignore: cascade_invocations
     stringBuffer.write('[');
     for (int drinkListCounter2 = 0;
         drinkListCounter2 < obj.drinkList[drinkListCounter1].length;
         drinkListCounter2++) {
-      // ignore: cascade_invocations
       stringBuffer.write('[');
       for (int drinkListCounter3 = 0;
           drinkListCounter3 <
@@ -139,9 +117,8 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write(']'); // ignore: cascade_invocations
+  stringBuffer.write(']');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aStringIntMap":');
   final List<String> aStringIntMapKeys1 = obj.aStringIntMap.keys.toList();
   stringBuffer.write('{');
@@ -154,20 +131,15 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(
           '"${aStringIntMapKeys1[aStringIntMapCounter1].toString().replaceAll('"', '\\"')}"');
     }
-    // ignore: cascade_invocations
     stringBuffer.write(':');
-    // ignore: cascade_invocations
     stringBuffer.write(
         "${obj.aStringIntMap[aStringIntMapKeys1[aStringIntMapCounter1]]}");
-
     if (aStringIntMapCounter1 != obj.aStringIntMap.length - 1) {
-      // ignore: cascade_invocations
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write('}'); // ignore: cascade_invocations
+  stringBuffer.write('}');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anIntStringMap":');
   final List<int> anIntStringMapKeys1 = obj.anIntStringMap.keys.toList();
   stringBuffer.write('{');
@@ -180,7 +152,6 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(
           '"${anIntStringMapKeys1[anIntStringMapCounter1].toString().replaceAll('"', '\\"')}"');
     }
-    // ignore: cascade_invocations
     stringBuffer.write(':');
     if (obj.anIntStringMap[anIntStringMapKeys1[anIntStringMapCounter1]] ==
         null) {
@@ -190,13 +161,11 @@ String testOuterClassToJson(TestOuterClass obj) {
           '"${obj.anIntStringMap[anIntStringMapKeys1[anIntStringMapCounter1]].toString().replaceAll('"', '\\"')}"');
     }
     if (anIntStringMapCounter1 != obj.anIntStringMap.length - 1) {
-      // ignore: cascade_invocations
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write('}'); // ignore: cascade_invocations
+  stringBuffer.write('}');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aMapOfMaps":');
   final List<int> aMapOfMapsKeys1 = obj.aMapOfMaps.keys.toList();
   stringBuffer.write('{');
@@ -209,7 +178,6 @@ String testOuterClassToJson(TestOuterClass obj) {
       stringBuffer.write(
           '"${aMapOfMapsKeys1[aMapOfMapsCounter1].toString().replaceAll('"', '\\"')}"');
     }
-    // ignore: cascade_invocations
     stringBuffer.write(':');
     final List<String> aMapOfMapsKeys2 =
         obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]].keys.toList();
@@ -223,7 +191,6 @@ String testOuterClassToJson(TestOuterClass obj) {
         stringBuffer.write(
             '"${aMapOfMapsKeys2[aMapOfMapsCounter2].toString().replaceAll('"', '\\"')}"');
       }
-      // ignore: cascade_invocations
       stringBuffer.write(':');
       if (obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]]
               [aMapOfMapsKeys2[aMapOfMapsCounter2]] ==
@@ -235,58 +202,39 @@ String testOuterClassToJson(TestOuterClass obj) {
       }
       if (aMapOfMapsCounter2 !=
           obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]].length - 1) {
-        // ignore: cascade_invocations
         stringBuffer.write(",");
       }
     }
     stringBuffer.write('}');
     if (aMapOfMapsCounter1 != obj.aMapOfMaps.length - 1) {
-      // ignore: cascade_invocations
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write('}'); // ignore: cascade_invocations
+  stringBuffer.write('}');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aDateTime":');
-  // ignore: cascade_invocations
   stringBuffer.write('"${obj.aDateTime.toUtc().toIso8601String()}"');
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aNullString":');
   if (obj.aNullString == null) {
     stringBuffer.write('null');
   } else {
     stringBuffer
         .write('"${obj.aNullString.toString().replaceAll('"', '\\"')}"');
-  } // ignore: cascade_invocations
+  }
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aNullInt":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.aNullInt}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aBoolTrue":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.aBoolTrue}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"aBoolFalse":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.aBoolFalse}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerClass":');
-  // ignore: cascade_invocations
   stringBuffer.write(testInnerClassToJson(obj.anInnerClass));
-  // ignore: cascade_invocations
   stringBuffer.write("}");
-
   return stringBuffer.toString();
 }
 
@@ -295,53 +243,41 @@ String testOuterClassToJson(TestOuterClass obj) {
 // Target: class TestInnerClass
 // **************************************************************************
 
+// ignore_for_file: cascade_invocations
+
 /// Maps an object of type TestInnerClass to JSON
 String testInnerClassToJson(TestInnerClass obj) {
   final StringBuffer stringBuffer = new StringBuffer();
-  stringBuffer.write("{"); // ignore: cascade_invocations
+  stringBuffer.write("{");
   stringBuffer.write('"anInnerString":');
   if (obj.anInnerString == null) {
     stringBuffer.write('null');
   } else {
     stringBuffer
         .write('"${obj.anInnerString.toString().replaceAll('"', '\\"')}"');
-  } // ignore: cascade_invocations
+  }
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerNum":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.anInnerNum}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerInt":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.anInnerInt}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerDouble":');
-  // ignore: cascade_invocations
   stringBuffer.write("${obj.anInnerDouble}");
-  // ignore: cascade_invocations
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerIntList":');
-  // ignore: cascade_invocations
   stringBuffer.write('[');
   for (int anInnerIntListCounter1 = 0;
       anInnerIntListCounter1 < obj.anInnerIntList.length;
       anInnerIntListCounter1++) {
-    // ignore: cascade_invocations
     stringBuffer.write("${obj.anInnerIntList[anInnerIntListCounter1]}");
-
     if (anInnerIntListCounter1 != obj.anInnerIntList.length - 1) {
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write(']'); // ignore: cascade_invocations
+  stringBuffer.write(']');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerStringIntMap":');
   final List<String> anInnerStringIntMapKeys1 =
       obj.anInnerStringIntMap.keys.toList();
@@ -355,20 +291,15 @@ String testInnerClassToJson(TestInnerClass obj) {
       stringBuffer.write(
           '"${anInnerStringIntMapKeys1[anInnerStringIntMapCounter1].toString().replaceAll('"', '\\"')}"');
     }
-    // ignore: cascade_invocations
     stringBuffer.write(':');
-    // ignore: cascade_invocations
     stringBuffer.write(
         "${obj.anInnerStringIntMap[anInnerStringIntMapKeys1[anInnerStringIntMapCounter1]]}");
-
     if (anInnerStringIntMapCounter1 != obj.anInnerStringIntMap.length - 1) {
-      // ignore: cascade_invocations
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write('}'); // ignore: cascade_invocations
+  stringBuffer.write('}');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerIntStringMap":');
   final List<int> anInnerIntStringMapKeys1 =
       obj.anInnerIntStringMap.keys.toList();
@@ -382,7 +313,6 @@ String testInnerClassToJson(TestInnerClass obj) {
       stringBuffer.write(
           '"${anInnerIntStringMapKeys1[anInnerIntStringMapCounter1].toString().replaceAll('"', '\\"')}"');
     }
-    // ignore: cascade_invocations
     stringBuffer.write(':');
     if (obj.anInnerIntStringMap[
             anInnerIntStringMapKeys1[anInnerIntStringMapCounter1]] ==
@@ -393,18 +323,13 @@ String testInnerClassToJson(TestInnerClass obj) {
           '"${obj.anInnerIntStringMap[anInnerIntStringMapKeys1[anInnerIntStringMapCounter1]].toString().replaceAll('"', '\\"')}"');
     }
     if (anInnerIntStringMapCounter1 != obj.anInnerIntStringMap.length - 1) {
-      // ignore: cascade_invocations
       stringBuffer.write(",");
     }
   }
-  stringBuffer.write('}'); // ignore: cascade_invocations
+  stringBuffer.write('}');
   stringBuffer.write(",");
-  // ignore: cascade_invocations
   stringBuffer.write('"anInnerDateTime":');
-  // ignore: cascade_invocations
   stringBuffer.write('"${obj.anInnerDateTime.toUtc().toIso8601String()}"');
-  // ignore: cascade_invocations
   stringBuffer.write("}");
-
   return stringBuffer.toString();
 }
