@@ -238,6 +238,85 @@ String _testOuterClassToJson(_TestOuterClass obj) {
   return stringBuffer.toString();
 }
 
+_TestOuterClass _jsonToTestOuterClass(Map<String, dynamic> data) {
+  _TestOuterClass object;
+  // First find values to use for a constructor
+  // Try the most specific constructor first
+  if (data.containsKey('aString') &&
+      data['aString'] is String &&
+      data.containsKey('aNum') &&
+      data['aNum'] is num &&
+      data.containsKey('anInt') &&
+      data['anInt'] is int &&
+      data.containsKey('aDouble') &&
+      data['aDouble'] is double) {
+    object = new _TestOuterClass(data['aString'] as String, data['aNum'] as num,
+        data['anInt'] as int, data['aDouble'] as double);
+    // 4-argument constructor body
+  } else if (data.containsKey('aString') &&
+      data['aString'] is String &&
+      data.containsKey('aNum') &&
+      data['aNum'] is num) {
+    object = new _TestOuterClass.smallConstructor(
+        data['aString'] as String, data['aNum'] as num);
+    // 2-argument constructor body
+  } else {
+    throw new Exception('Could not find appropriate constructor.');
+  }
+  if (data.containsKey('aString')) {
+    // object.aString = data['aString'] as (String) → void;
+  }
+  if (data.containsKey('aNum')) {
+    // object.aNum = data['aNum'] as (num) → void;
+  }
+  if (data.containsKey('anInt')) {
+    // object.anInt = data['anInt'] as (int) → void;
+  }
+  if (data.containsKey('aDouble')) {
+    // object.aDouble = data['aDouble'] as (double) → void;
+  }
+  if (data.containsKey('anIntList')) {
+    // object.anIntList = data['anIntList'] as (List<int>) → void;
+  }
+  if (data.containsKey('aStringList')) {
+    // object.aStringList = data['aStringList'] as (List<String>) → void;
+  }
+  if (data.containsKey('numberList')) {
+    // object.numberList = data['numberList'] as (List<List<int>>) → void;
+  }
+  if (data.containsKey('drinkList')) {
+    // object.drinkList = data['drinkList'] as (List<List<List<String>>>) → void;
+  }
+  if (data.containsKey('aStringIntMap')) {
+    // object.aStringIntMap = data['aStringIntMap'] as (Map<String, int>) → void;
+  }
+  if (data.containsKey('anIntStringMap')) {
+    // object.anIntStringMap = data['anIntStringMap'] as (Map<int, String>) → void;
+  }
+  if (data.containsKey('aMapOfMaps')) {
+    // object.aMapOfMaps = data['aMapOfMaps'] as (Map<int, Map<String, String>>) → void;
+  }
+  if (data.containsKey('aDateTime')) {
+    // object.aDateTime = data['aDateTime'] as (DateTime) → void;
+  }
+  if (data.containsKey('aNullString')) {
+    // object.aNullString = data['aNullString'] as (String) → void;
+  }
+  if (data.containsKey('aNullInt')) {
+    // object.aNullInt = data['aNullInt'] as (int) → void;
+  }
+  if (data.containsKey('aBoolTrue')) {
+    // object.aBoolTrue = data['aBoolTrue'] as (bool) → void;
+  }
+  if (data.containsKey('aBoolFalse')) {
+    // object.aBoolFalse = data['aBoolFalse'] as (bool) → void;
+  }
+  if (data.containsKey('anInnerClass')) {
+    // object.anInnerClass = data['anInnerClass'] as (_TestInnerClass) → void;
+  }
+  return object;
+}
+
 // **************************************************************************
 // Generator: JsonMapperGenerator
 // Target: class _TestInnerClass
@@ -332,4 +411,36 @@ String _testInnerClassToJson(_TestInnerClass obj) {
   stringBuffer.write('"${obj.anInnerDateTime.toUtc().toIso8601String()}"');
   stringBuffer.write('}');
   return stringBuffer.toString();
+}
+
+_TestInnerClass _jsonToTestInnerClass(Map<String, dynamic> data) {
+  _TestInnerClass object;
+  // First find values to use for a constructor
+  // Try the most specific constructor first
+  object = new _TestInnerClass();
+  if (data.containsKey('anInnerString')) {
+    // object.anInnerString = data['anInnerString'] as (String) → void;
+  }
+  if (data.containsKey('anInnerNum')) {
+    // object.anInnerNum = data['anInnerNum'] as (num) → void;
+  }
+  if (data.containsKey('anInnerInt')) {
+    // object.anInnerInt = data['anInnerInt'] as (int) → void;
+  }
+  if (data.containsKey('anInnerDouble')) {
+    // object.anInnerDouble = data['anInnerDouble'] as (double) → void;
+  }
+  if (data.containsKey('anInnerIntList')) {
+    // object.anInnerIntList = data['anInnerIntList'] as (List<int>) → void;
+  }
+  if (data.containsKey('anInnerStringIntMap')) {
+    // object.anInnerStringIntMap = data['anInnerStringIntMap'] as (Map<String, int>) → void;
+  }
+  if (data.containsKey('anInnerIntStringMap')) {
+    // object.anInnerIntStringMap = data['anInnerIntStringMap'] as (Map<int, String>) → void;
+  }
+  if (data.containsKey('anInnerDateTime')) {
+    // object.anInnerDateTime = data['anInnerDateTime'] as (DateTime) → void;
+  }
+  return object;
 }

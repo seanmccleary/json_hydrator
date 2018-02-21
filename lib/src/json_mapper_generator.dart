@@ -18,18 +18,23 @@ class JsonMapperGenerator extends Generator {
     }
 
     final String className = element.displayName;
-    final String toJsonFunctionName = _getMappingFunctionName(className);
+    final String toJsonFunctionName = _getMapToJsonFunctionName(className);
+    final String toObjectFunctionName = _getMapToObjectFunctionName(className);
 
     // Generate the toJson method
     final String generatedCode = """
       // ignore_for_file: cascade_invocations
 
       /// Maps an object of type $className to JSON
-      String $toJsonFunctionName($className obj) {
-        final StringBuffer stringBuffer = new StringBuffer();
+      String $toJsonFunctionName($className obj) {        
         ${_generateToJsonFunction(element as ClassElement)}
-        return stringBuffer.toString();
-      }""";
+      }
+      
+      $className $toObjectFunctionName(Map<String, dynamic> data) {
+        $className object;
+        ${_generateToObjectFunction(element as ClassElement)}
+      }
+      """;
 
     return generatedCode;
   }
@@ -37,7 +42,9 @@ class JsonMapperGenerator extends Generator {
   /// Create the function to convert an object to JSON
   String _generateToJsonFunction(ClassElement classElement) {
     final StringBuffer generatedCode =
-        new StringBuffer("stringBuffer.write('{');");
+        new StringBuffer("""
+            final StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.write('{');""");
 
     final List<PropertyAccessorElement> properties = classElement.accessors
         .where((PropertyAccessorElement property) =>
@@ -57,7 +64,9 @@ class JsonMapperGenerator extends Generator {
       }
     }
 
-    generatedCode.write("stringBuffer.write('}');");
+    generatedCode.write("""
+      stringBuffer.write('}');
+      return stringBuffer.toString();""");
     return generatedCode.toString();
   }
 
@@ -131,10 +140,76 @@ class JsonMapperGenerator extends Generator {
     // Is it an object?
     else {
       final String innerClassName = returnTypeName;
-      final String innerToJsonFunctionName = _getMappingFunctionName(innerClassName);
+      final String innerToJsonFunctionName = _getMapToJsonFunctionName(innerClassName);
       generatedCode.write("stringBuffer.write($innerToJsonFunctionName($propertyName));");
     }
 
+    return generatedCode.toString();
+  }
+
+  String _generateToObjectFunction(ClassElement classElement) {
+    
+    final StringBuffer generatedCode = new StringBuffer();
+    generatedCode.writeln("""
+      // First find values to use for a constructor
+      // Try the most specific constructor first""");
+    
+    final List<ConstructorElement> constructors = classElement.constructors;
+    constructors.sort((ConstructorElement ce1, ConstructorElement ce2) {
+      if (ce1.parameters.length == ce2.parameters.length) {
+        return 0;
+      }
+      return ce1.parameters.length < ce2.parameters.length ? 1 : -1;      
+    });
+
+    bool firstIf = true;
+    for (ConstructorElement ce in constructors) {
+
+      if (ce.parameters.isNotEmpty) {
+
+        final List<String> conditions = <String>[];      
+        final List<String> parameters = <String>[];
+        for (ParameterElement pe in ce.parameters) {
+           conditions.add("data.containsKey('${pe.name}') && data['${pe.name}'] is ${pe.type.name}");
+           parameters.add("data['${pe.name}'] as ${pe.type.name}");
+        }
+
+        generatedCode.writeln("""
+          ${firstIf ? "if" : "else if"} (${conditions.join(" && ")}) {
+            object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}(${parameters.join(", ")}); 
+          }""");
+        firstIf = false;
+      } else {
+        generatedCode.writeln("object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}();");
+      }
+    }
+
+    if (!firstIf) {
+      generatedCode.write("""
+        else {
+          throw new Exception('Could not find appropriate constructor.');
+        }
+      """);
+    }
+
+    // Get a list of all the settings...
+    final List<PropertyAccessorElement> properties = classElement.accessors
+        .where((PropertyAccessorElement property) =>
+            property.isSetter && property.isPublic)
+        .toList();
+
+    // And loop over them, trying to set them.
+    for (int count = 0; count < properties.length; count++) {
+      final PropertyAccessorElement property = properties[count];
+      generatedCode.write("""
+        if(data.containsKey('${property.displayName}')) {
+          // object.${property.displayName} = data['${property.displayName}'] as ${property.type.displayName};
+        }
+      """);      
+    }
+
+    generatedCode.writeln("return object;");
+    
     return generatedCode.toString();
   }
 
@@ -209,8 +284,13 @@ class JsonMapperGenerator extends Generator {
   /// TODO: Support subclasses of [DateTime]
   bool _isTypeNameDateTime(String typeName) => typeName == "DateTime";
 
-  String _getMappingFunctionName(String className) {
-    return "${className.replaceFirstMapped(_singleLetter, (Match m) => m.group(0).toLowerCase())}ToJson";
+  String _getMapToJsonFunctionName(String className) => "${className.replaceFirstMapped(_singleLetter, (Match m) => m.group(0).toLowerCase())}ToJson";
+
+  String _getMapToObjectFunctionName(String className) {
+    if (className.startsWith("_")) {
+      return "_jsonTo${className.substring(1)}";
+    }
+    return "jsonTo$className";
   }
 }
 
