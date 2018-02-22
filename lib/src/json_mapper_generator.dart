@@ -202,8 +202,8 @@ class JsonMapperGenerator extends Generator {
     for (int count = 0; count < properties.length; count++) {
       final PropertyAccessorElement property = properties[count];
       generatedCode.write("""
-        if(data.containsKey('${property.displayName}')) {
-          // object.${property.displayName} = data['${property.displayName}'] as ${property.type.displayName};
+        if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is ${property.type.parameters.first.type.displayName}) {
+          object.${property.displayName} = data['${property.displayName}'] as ${property.type.parameters.first.type.displayName};
         }
       """);      
     }
