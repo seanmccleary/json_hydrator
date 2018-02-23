@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:build_runner/build_runner.dart';
-import 'package:json_hydrator/src/json_mapper_generator.dart';
+import 'package:json_hydrator/json_hydrator.dart';
 import 'package:source_gen/source_gen.dart';
 
 Future<dynamic> main() async {

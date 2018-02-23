@@ -201,11 +201,20 @@ class JsonMapperGenerator extends Generator {
     // And loop over them, trying to set them.
     for (int count = 0; count < properties.length; count++) {
       final PropertyAccessorElement property = properties[count];
-      generatedCode.write("""
-        if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is ${property.type.parameters.first.type.displayName}) {
-          object.${property.displayName} = data['${property.displayName}'] as ${property.type.parameters.first.type.displayName};
-        }
-      """);      
+      final String typeName = property.type.parameters.first.type.displayName;
+      if (_isTypeNameDateTime(typeName)) {
+        generatedCode.write("""
+          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is String) {
+            object.${property.displayName} = DateTime.parse(data['${property.displayName}'] as String);
+          }
+        """);              
+      } else {
+        generatedCode.write("""
+          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is $typeName) {
+            object.${property.displayName} = data['${property.displayName}'] as $typeName;
+          }
+        """);      
+      }
     }
 
     generatedCode.writeln("return object;");

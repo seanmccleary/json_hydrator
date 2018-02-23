@@ -298,8 +298,8 @@ _TestOuterClass _jsonToTestOuterClass(Map<String, dynamic> data) {
       data['aMapOfMaps'] is Map<int, Map<String, String>>) {
     object.aMapOfMaps = data['aMapOfMaps'] as Map<int, Map<String, String>>;
   }
-  if (data.containsKey('aDateTime') && data['aDateTime'] is DateTime) {
-    object.aDateTime = data['aDateTime'] as DateTime;
+  if (data.containsKey('aDateTime') && data['aDateTime'] is String) {
+    object.aDateTime = DateTime.parse(data['aDateTime'] as String);
   }
   if (data.containsKey('aNullString') && data['aNullString'] is String) {
     object.aNullString = data['aNullString'] as String;
@@ -448,8 +448,8 @@ _TestInnerClass _jsonToTestInnerClass(Map<String, dynamic> data) {
         data['anInnerIntStringMap'] as Map<int, String>;
   }
   if (data.containsKey('anInnerDateTime') &&
-      data['anInnerDateTime'] is DateTime) {
-    object.anInnerDateTime = data['anInnerDateTime'] as DateTime;
+      data['anInnerDateTime'] is String) {
+    object.anInnerDateTime = DateTime.parse(data['anInnerDateTime'] as String);
   }
   return object;
 }
