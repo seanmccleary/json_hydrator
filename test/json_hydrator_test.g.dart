@@ -291,8 +291,12 @@ _TestOuterClass _jsonToTestOuterClass(Map<String, dynamic> data) {
     object.aStringIntMap = data['aStringIntMap'] as Map<String, int>;
   }
   if (data.containsKey('anIntStringMap') &&
-      data['anIntStringMap'] is Map<int, String>) {
-    object.anIntStringMap = data['anIntStringMap'] as Map<int, String>;
+      data['anIntStringMap'] is Map<String, String>) {
+        object.anIntStringMap = new Map<int, String>.fromIterables(
+          (data['anIntStringMap'] as Map<String, String>).keys.map(int.parse),
+          (data['anIntStringMap'] as Map<String, String>).values
+        );
+    
   }
   if (data.containsKey('aMapOfMaps') &&
       data['aMapOfMaps'] is Map<int, Map<String, String>>) {
