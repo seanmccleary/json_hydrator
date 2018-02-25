@@ -200,6 +200,7 @@ class JsonMapperGenerator extends Generator {
 
     // And loop over them, trying to set them.
     for (int count = 0; count < properties.length; count++) {
+      KeyValuePairTypes keyValuePairTypes;
       final PropertyAccessorElement property = properties[count];
       final String typeName = property.type.parameters.first.type.displayName;
       if (_isTypeNameDateTime(typeName)) {
@@ -208,8 +209,10 @@ class JsonMapperGenerator extends Generator {
             object.${property.displayName} = DateTime.parse(data['${property.displayName}'] as String);
           }
         """);
-      } else if (_isTypeNameMap(typeName) && _isTypeNameNum(_getMapTypes(typeName).keyType)) {
-        final KeyValuePairTypes keyValuePairTypes = _getMapTypes(typeName);
+      } else if (
+        _isTypeNameMap(typeName)
+        && _isTypeNameNum((keyValuePairTypes = _getMapTypes(typeName)).keyType)
+        ) {
         generatedCode.write("""
           if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is Map<String, ${keyValuePairTypes.valueType}>) {
             object.${property.displayName} = new Map<${keyValuePairTypes.keyType}, ${keyValuePairTypes.valueType}>.fromIterables(
