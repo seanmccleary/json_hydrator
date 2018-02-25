@@ -4,7 +4,6 @@ import 'package:source_gen/source_gen.dart';
 
 /// A generator to create classes which map objects to JSON.
 class JsonMapperGenerator extends Generator {
-
   final RegExp _trimObjName = new RegExp(r'^[^\.]+\.');
   final RegExp _trimAfterBracket = new RegExp(r'\[.+$');
   final RegExp _listTypeRegExp = new RegExp(r"^List<(.+)>$");
@@ -41,8 +40,7 @@ class JsonMapperGenerator extends Generator {
 
   /// Create the function to convert an object to JSON
   String _generateToJsonFunction(ClassElement classElement) {
-    final StringBuffer generatedCode =
-        new StringBuffer("""
+    final StringBuffer generatedCode = new StringBuffer("""
             final StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.write('{');""");
 
@@ -134,21 +132,23 @@ class JsonMapperGenerator extends Generator {
 
     // Is it a DateTime?  If so make it an ISO8601 string.
     else if (_isTypeNameDateTime(returnTypeName)) {
-      generatedCode.write("stringBuffer.write('\"\${$propertyName.toUtc().toIso8601String()}\"');");
+      generatedCode.write(
+          "stringBuffer.write('\"\${$propertyName.toUtc().toIso8601String()}\"');");
     }
 
     // Is it an object?
     else {
       final String innerClassName = returnTypeName;
-      final String innerToJsonFunctionName = _getMapToJsonFunctionName(innerClassName);
-      generatedCode.write("stringBuffer.write($innerToJsonFunctionName($propertyName));");
+      final String innerToJsonFunctionName =
+          _getMapToJsonFunctionName(innerClassName);
+      generatedCode.write(
+          "stringBuffer.write($innerToJsonFunctionName($propertyName));");
     }
 
     return generatedCode.toString();
   }
 
   String _generateToObjectFunction(ClassElement classElement) {
-
     final StringBuffer generatedCode = new StringBuffer();
     generatedCode.writeln("""
       // First find values to use for a constructor
@@ -164,14 +164,13 @@ class JsonMapperGenerator extends Generator {
 
     bool firstIf = true;
     for (ConstructorElement ce in constructors) {
-
       if (ce.parameters.isNotEmpty) {
-
         final List<String> conditions = <String>[];
         final List<String> parameters = <String>[];
         for (ParameterElement pe in ce.parameters) {
-           conditions.add("data.containsKey('${pe.name}') && data['${pe.name}'] is ${pe.type.name}");
-           parameters.add("data['${pe.name}'] as ${pe.type.name}");
+          conditions.add(
+              "data.containsKey('${pe.name}') && data['${pe.name}'] is ${pe.type.name}");
+          parameters.add("data['${pe.name}'] as ${pe.type.name}");
         }
 
         generatedCode.writeln("""
@@ -180,7 +179,8 @@ class JsonMapperGenerator extends Generator {
           }""");
         firstIf = false;
       } else {
-        generatedCode.writeln("object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}();");
+        generatedCode.writeln(
+            "object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}();");
       }
     }
 
@@ -209,10 +209,9 @@ class JsonMapperGenerator extends Generator {
             object.${property.displayName} = DateTime.parse(data['${property.displayName}'] as String);
           }
         """);
-      } else if (
-        _isTypeNameMap(typeName)
-        && _isTypeNameNum((keyValuePairTypes = _getMapTypes(typeName)).keyType)
-        ) {
+      } else if (_isTypeNameMap(typeName) &&
+          _isTypeNameNum(
+              (keyValuePairTypes = _getMapTypes(typeName)).keyType)) {
         generatedCode.write("""
           if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is Map<String, ${keyValuePairTypes.valueType}>) {
             object.${property.displayName} = new Map<${keyValuePairTypes.keyType}, ${keyValuePairTypes.valueType}>.fromIterables(
@@ -264,7 +263,8 @@ class JsonMapperGenerator extends Generator {
   /// Gets the type of a List
   ///
   /// i.e. List<int> returns "int"
-  String _getListType(String typeName) =>_listTypeRegExp.firstMatch(typeName).group(1);
+  String _getListType(String typeName) =>
+      _listTypeRegExp.firstMatch(typeName).group(1);
 
   /// Gets thet types of a Map
   ///
@@ -306,7 +306,8 @@ class JsonMapperGenerator extends Generator {
   /// TODO: Support subclasses of [DateTime]
   bool _isTypeNameDateTime(String typeName) => typeName == "DateTime";
 
-  String _getMapToJsonFunctionName(String className) => "${className.replaceFirstMapped(_singleLetter, (Match m) => m.group(0).toLowerCase())}ToJson";
+  String _getMapToJsonFunctionName(String className) =>
+      "${className.replaceFirstMapped(_singleLetter, (Match m) => m.group(0).toLowerCase())}ToJson";
 
   String _getMapToObjectFunctionName(String className) {
     if (className.startsWith("_")) {
