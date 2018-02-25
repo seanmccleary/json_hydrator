@@ -292,15 +292,17 @@ _TestOuterClass _jsonToTestOuterClass(Map<String, dynamic> data) {
   }
   if (data.containsKey('anIntStringMap') &&
       data['anIntStringMap'] is Map<String, String>) {
-        object.anIntStringMap = new Map<int, String>.fromIterables(
-          (data['anIntStringMap'] as Map<String, String>).keys.map(int.parse),
-          (data['anIntStringMap'] as Map<String, String>).values
-        );
-    
+    object.anIntStringMap = new Map<int, String>.fromIterables(
+        (data['anIntStringMap'] as Map<String, String>).keys.map(int.parse),
+        (data['anIntStringMap'] as Map<String, String>).values);
   }
   if (data.containsKey('aMapOfMaps') &&
-      data['aMapOfMaps'] is Map<int, Map<String, String>>) {
-    object.aMapOfMaps = data['aMapOfMaps'] as Map<int, Map<String, String>>;
+      data['aMapOfMaps'] is Map<String, Map<String, String>>) {
+    object.aMapOfMaps = new Map<int, Map<String, String>>.fromIterables(
+        (data['aMapOfMaps'] as Map<String, Map<String, String>>)
+            .keys
+            .map(int.parse),
+        (data['aMapOfMaps'] as Map<String, Map<String, String>>).values);
   }
   if (data.containsKey('aDateTime') && data['aDateTime'] is String) {
     object.aDateTime = DateTime.parse(data['aDateTime'] as String);
@@ -447,9 +449,12 @@ _TestInnerClass _jsonToTestInnerClass(Map<String, dynamic> data) {
         data['anInnerStringIntMap'] as Map<String, int>;
   }
   if (data.containsKey('anInnerIntStringMap') &&
-      data['anInnerIntStringMap'] is Map<int, String>) {
-    object.anInnerIntStringMap =
-        data['anInnerIntStringMap'] as Map<int, String>;
+      data['anInnerIntStringMap'] is Map<String, String>) {
+    object.anInnerIntStringMap = new Map<int, String>.fromIterables(
+        (data['anInnerIntStringMap'] as Map<String, String>)
+            .keys
+            .map(int.parse),
+        (data['anInnerIntStringMap'] as Map<String, String>).values);
   }
   if (data.containsKey('anInnerDateTime') &&
       data['anInnerDateTime'] is String) {

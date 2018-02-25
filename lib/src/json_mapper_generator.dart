@@ -26,10 +26,10 @@ class JsonMapperGenerator extends Generator {
       // ignore_for_file: cascade_invocations
 
       /// Maps an object of type $className to JSON
-      String $toJsonFunctionName($className obj) {        
+      String $toJsonFunctionName($className obj) {
         ${_generateToJsonFunction(element as ClassElement)}
       }
-      
+
       $className $toObjectFunctionName(Map<String, dynamic> data) {
         $className object;
         ${_generateToObjectFunction(element as ClassElement)}
@@ -148,18 +148,18 @@ class JsonMapperGenerator extends Generator {
   }
 
   String _generateToObjectFunction(ClassElement classElement) {
-    
+
     final StringBuffer generatedCode = new StringBuffer();
     generatedCode.writeln("""
       // First find values to use for a constructor
       // Try the most specific constructor first""");
-    
+
     final List<ConstructorElement> constructors = classElement.constructors;
     constructors.sort((ConstructorElement ce1, ConstructorElement ce2) {
       if (ce1.parameters.length == ce2.parameters.length) {
         return 0;
       }
-      return ce1.parameters.length < ce2.parameters.length ? 1 : -1;      
+      return ce1.parameters.length < ce2.parameters.length ? 1 : -1;
     });
 
     bool firstIf = true;
@@ -167,7 +167,7 @@ class JsonMapperGenerator extends Generator {
 
       if (ce.parameters.isNotEmpty) {
 
-        final List<String> conditions = <String>[];      
+        final List<String> conditions = <String>[];
         final List<String> parameters = <String>[];
         for (ParameterElement pe in ce.parameters) {
            conditions.add("data.containsKey('${pe.name}') && data['${pe.name}'] is ${pe.type.name}");
@@ -176,7 +176,7 @@ class JsonMapperGenerator extends Generator {
 
         generatedCode.writeln("""
           ${firstIf ? "if" : "else if"} (${conditions.join(" && ")}) {
-            object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}(${parameters.join(", ")}); 
+            object = new ${classElement.name}${ce.name.isNotEmpty ? ".${ce.name}" : ""}(${parameters.join(", ")});
           }""");
         firstIf = false;
       } else {
@@ -207,18 +207,28 @@ class JsonMapperGenerator extends Generator {
           if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is String) {
             object.${property.displayName} = DateTime.parse(data['${property.displayName}'] as String);
           }
-        """);              
+        """);
+      } else if (_isTypeNameMap(typeName) && _isTypeNameNum(_getMapTypes(typeName).keyType)) {
+        final KeyValuePairTypes keyValuePairTypes = _getMapTypes(typeName);
+        generatedCode.write("""
+          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is Map<String, ${keyValuePairTypes.valueType}>) {
+            object.${property.displayName} = new Map<${keyValuePairTypes.keyType}, ${keyValuePairTypes.valueType}>.fromIterables(
+              (data['${property.displayName}'] as Map<String, ${keyValuePairTypes.valueType}>).keys.map(int.parse),
+              (data['${property.displayName}'] as Map<String, ${keyValuePairTypes.valueType}>).values
+            );
+          }
+        """);
       } else {
         generatedCode.write("""
           if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is $typeName) {
             object.${property.displayName} = data['${property.displayName}'] as $typeName;
           }
-        """);      
+        """);
       }
     }
 
     generatedCode.writeln("return object;");
-    
+
     return generatedCode.toString();
   }
 
