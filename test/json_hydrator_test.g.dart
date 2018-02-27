@@ -166,47 +166,110 @@ String _testOuterClassToJson(_TestOuterClass obj) {
   }
   stringBuffer.write('}');
   stringBuffer.write(',');
-  stringBuffer.write('"aMapOfMaps":');
-  final List<int> aMapOfMapsKeys1 = obj.aMapOfMaps.keys.toList();
+  stringBuffer.write('"anIntMapOfIntBoolMaps":');
+  final List<int> anIntMapOfIntBoolMapsKeys1 =
+      obj.anIntMapOfIntBoolMaps.keys.toList();
   stringBuffer.write('{');
-  for (int aMapOfMapsCounter1 = 0;
-      aMapOfMapsCounter1 < aMapOfMapsKeys1.length;
-      aMapOfMapsCounter1++) {
-    if (aMapOfMapsKeys1[aMapOfMapsCounter1] == null) {
+  for (int anIntMapOfIntBoolMapsCounter1 = 0;
+      anIntMapOfIntBoolMapsCounter1 < anIntMapOfIntBoolMapsKeys1.length;
+      anIntMapOfIntBoolMapsCounter1++) {
+    if (anIntMapOfIntBoolMapsKeys1[anIntMapOfIntBoolMapsCounter1] == null) {
       stringBuffer.write('null');
     } else {
       stringBuffer.write(
-          '"${aMapOfMapsKeys1[aMapOfMapsCounter1].toString().replaceAll('"', '\\"')}"');
+          '"${anIntMapOfIntBoolMapsKeys1[anIntMapOfIntBoolMapsCounter1].toString().replaceAll('"', '\\"')}"');
     }
     stringBuffer.write(':');
-    final List<String> aMapOfMapsKeys2 =
-        obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]].keys.toList();
+    final List<int> anIntMapOfIntBoolMapsKeys2 = obj
+        .anIntMapOfIntBoolMaps[
+            anIntMapOfIntBoolMapsKeys1[anIntMapOfIntBoolMapsCounter1]]
+        .keys
+        .toList();
     stringBuffer.write('{');
-    for (int aMapOfMapsCounter2 = 0;
-        aMapOfMapsCounter2 < aMapOfMapsKeys2.length;
-        aMapOfMapsCounter2++) {
-      if (aMapOfMapsKeys2[aMapOfMapsCounter2] == null) {
+    for (int anIntMapOfIntBoolMapsCounter2 = 0;
+        anIntMapOfIntBoolMapsCounter2 < anIntMapOfIntBoolMapsKeys2.length;
+        anIntMapOfIntBoolMapsCounter2++) {
+      if (anIntMapOfIntBoolMapsKeys2[anIntMapOfIntBoolMapsCounter2] == null) {
         stringBuffer.write('null');
       } else {
         stringBuffer.write(
-            '"${aMapOfMapsKeys2[aMapOfMapsCounter2].toString().replaceAll('"', '\\"')}"');
+            '"${anIntMapOfIntBoolMapsKeys2[anIntMapOfIntBoolMapsCounter2].toString().replaceAll('"', '\\"')}"');
       }
       stringBuffer.write(':');
-      if (obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]]
-              [aMapOfMapsKeys2[aMapOfMapsCounter2]] ==
-          null) {
-        stringBuffer.write('null');
-      } else {
-        stringBuffer.write(
-            '"${obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]][aMapOfMapsKeys2[aMapOfMapsCounter2]].toString().replaceAll('"', '\\"')}"');
-      }
-      if (aMapOfMapsCounter2 !=
-          obj.aMapOfMaps[aMapOfMapsKeys1[aMapOfMapsCounter1]].length - 1) {
+      stringBuffer.write(
+          '${obj.anIntMapOfIntBoolMaps[anIntMapOfIntBoolMapsKeys1[anIntMapOfIntBoolMapsCounter1]][anIntMapOfIntBoolMapsKeys2[anIntMapOfIntBoolMapsCounter2]]}');
+      if (anIntMapOfIntBoolMapsCounter2 !=
+          obj
+                  .anIntMapOfIntBoolMaps[
+                      anIntMapOfIntBoolMapsKeys1[anIntMapOfIntBoolMapsCounter1]]
+                  .length -
+              1) {
         stringBuffer.write(',');
       }
     }
     stringBuffer.write('}');
-    if (aMapOfMapsCounter1 != obj.aMapOfMaps.length - 1) {
+    if (anIntMapOfIntBoolMapsCounter1 != obj.anIntMapOfIntBoolMaps.length - 1) {
+      stringBuffer.write(',');
+    }
+  }
+  stringBuffer.write('}');
+  stringBuffer.write(',');
+  stringBuffer.write('"anIntMapOfStringStringMaps":');
+  final List<int> anIntMapOfStringStringMapsKeys1 =
+      obj.anIntMapOfStringStringMaps.keys.toList();
+  stringBuffer.write('{');
+  for (int anIntMapOfStringStringMapsCounter1 = 0;
+      anIntMapOfStringStringMapsCounter1 <
+          anIntMapOfStringStringMapsKeys1.length;
+      anIntMapOfStringStringMapsCounter1++) {
+    if (anIntMapOfStringStringMapsKeys1[anIntMapOfStringStringMapsCounter1] ==
+        null) {
+      stringBuffer.write('null');
+    } else {
+      stringBuffer.write(
+          '"${anIntMapOfStringStringMapsKeys1[anIntMapOfStringStringMapsCounter1].toString().replaceAll('"', '\\"')}"');
+    }
+    stringBuffer.write(':');
+    final List<String> anIntMapOfStringStringMapsKeys2 = obj
+        .anIntMapOfStringStringMaps[
+            anIntMapOfStringStringMapsKeys1[anIntMapOfStringStringMapsCounter1]]
+        .keys
+        .toList();
+    stringBuffer.write('{');
+    for (int anIntMapOfStringStringMapsCounter2 = 0;
+        anIntMapOfStringStringMapsCounter2 <
+            anIntMapOfStringStringMapsKeys2.length;
+        anIntMapOfStringStringMapsCounter2++) {
+      if (anIntMapOfStringStringMapsKeys2[anIntMapOfStringStringMapsCounter2] ==
+          null) {
+        stringBuffer.write('null');
+      } else {
+        stringBuffer.write(
+            '"${anIntMapOfStringStringMapsKeys2[anIntMapOfStringStringMapsCounter2].toString().replaceAll('"', '\\"')}"');
+      }
+      stringBuffer.write(':');
+      if (obj.anIntMapOfStringStringMaps[anIntMapOfStringStringMapsKeys1[
+                  anIntMapOfStringStringMapsCounter1]][
+              anIntMapOfStringStringMapsKeys2[
+                  anIntMapOfStringStringMapsCounter2]] ==
+          null) {
+        stringBuffer.write('null');
+      } else {
+        stringBuffer.write(
+            '"${obj.anIntMapOfStringStringMaps[anIntMapOfStringStringMapsKeys1[anIntMapOfStringStringMapsCounter1]][anIntMapOfStringStringMapsKeys2[anIntMapOfStringStringMapsCounter2]].toString().replaceAll('"', '\\"')}"');
+      }
+      if (anIntMapOfStringStringMapsCounter2 !=
+          obj
+                  .anIntMapOfStringStringMaps[anIntMapOfStringStringMapsKeys1[
+                      anIntMapOfStringStringMapsCounter1]]
+                  .length -
+              1) {
+        stringBuffer.write(',');
+      }
+    }
+    stringBuffer.write('}');
+    if (anIntMapOfStringStringMapsCounter1 !=
+        obj.anIntMapOfStringStringMaps.length - 1) {
       stringBuffer.write(',');
     }
   }
@@ -261,68 +324,73 @@ _TestOuterClass _jsonToTestOuterClass(Map<String, dynamic> data) {
   } else {
     throw new Exception('Could not find appropriate constructor.');
   }
-  if (data.containsKey('aString') && data['aString'] is String) {
-    object.aString = data['aString'] as String;
+  object.aString = data['aString'] as String;
+  object.aNum = data['aNum'] as num;
+  object.anInt = data['anInt'] as int;
+  object.aDouble = data['aDouble'] as double;
+  object.anIntList = data['anIntList'] as List<int>;
+  object.aStringList = data['aStringList'] as List<String>;
+  object.numberList = data['numberList'] as List<List<int>>;
+  object.drinkList = data['drinkList'] as List<List<List<String>>>;
+  object.aStringIntMap = <String, int>{};
+  final Iterable<String> aStringIntMapKeys =
+      data['aStringIntMap'].keys as Iterable<String>;
+  for (String aStringIntMapKey in aStringIntMapKeys) {
+    object.aStringIntMap[aStringIntMapKey] = (data['aStringIntMap']
+        as Map<String, dynamic>)[aStringIntMapKey] as int;
   }
-  if (data.containsKey('aNum') && data['aNum'] is num) {
-    object.aNum = data['aNum'] as num;
+  object.anIntStringMap = <int, String>{};
+  final Iterable<String> anIntStringMapKeys =
+      data['anIntStringMap'].keys as Iterable<String>;
+  for (String anIntStringMapKey in anIntStringMapKeys) {
+    object.anIntStringMap[int.parse(anIntStringMapKey)] =
+        (data['anIntStringMap'] as Map<String, dynamic>)[anIntStringMapKey]
+        as String;
   }
-  if (data.containsKey('anInt') && data['anInt'] is int) {
-    object.anInt = data['anInt'] as int;
+  object.anIntMapOfIntBoolMaps = <int, Map<int, bool>>{};
+  final Iterable<String> anIntMapOfIntBoolMapsKeys =
+      data['anIntMapOfIntBoolMaps'].keys as Iterable<String>;
+  for (String anIntMapOfIntBoolMapsKey in anIntMapOfIntBoolMapsKeys) {
+    object.anIntMapOfIntBoolMaps[int.parse(anIntMapOfIntBoolMapsKey)] =
+        <int, bool>{};
+    final Iterable<String> anIntMapOfIntBoolMapsKeyKeys =
+        (data['anIntMapOfIntBoolMaps'] as Map<String, dynamic>)[
+                anIntMapOfIntBoolMapsKey]
+            .keys as Iterable<String>;
+    for (String anIntMapOfIntBoolMapsKeyKey in anIntMapOfIntBoolMapsKeyKeys) {
+      object.anIntMapOfIntBoolMaps[int.parse(anIntMapOfIntBoolMapsKey)]
+              [int.parse(anIntMapOfIntBoolMapsKeyKey)] =
+          ((data['anIntMapOfIntBoolMaps'] as Map<String, dynamic>)[
+                  anIntMapOfIntBoolMapsKey]
+              as Map<String, dynamic>)[anIntMapOfIntBoolMapsKeyKey] as bool;
+    }
   }
-  if (data.containsKey('aDouble') && data['aDouble'] is double) {
-    object.aDouble = data['aDouble'] as double;
+  object.anIntMapOfStringStringMaps = <int, Map<String, String>>{};
+  final Iterable<String> anIntMapOfStringStringMapsKeys =
+      data['anIntMapOfStringStringMaps'].keys as Iterable<String>;
+  for (String anIntMapOfStringStringMapsKey in anIntMapOfStringStringMapsKeys) {
+    object.anIntMapOfStringStringMaps[
+        int.parse(anIntMapOfStringStringMapsKey)] = <String, String>{};
+    final Iterable<String> anIntMapOfStringStringMapsKeyKeys =
+        (data['anIntMapOfStringStringMaps'] as Map<String, dynamic>)[
+                anIntMapOfStringStringMapsKey]
+            .keys as Iterable<String>;
+    for (String anIntMapOfStringStringMapsKeyKey
+        in anIntMapOfStringStringMapsKeyKeys) {
+      object.anIntMapOfStringStringMaps[
+              int.parse(anIntMapOfStringStringMapsKey)]
+          [anIntMapOfStringStringMapsKeyKey] = ((data[
+                  'anIntMapOfStringStringMaps']
+              as Map<String, dynamic>)[anIntMapOfStringStringMapsKey]
+          as Map<String, dynamic>)[anIntMapOfStringStringMapsKeyKey] as String;
+    }
   }
-  if (data.containsKey('anIntList') && data['anIntList'] is List<int>) {
-    object.anIntList = data['anIntList'] as List<int>;
-  }
-  if (data.containsKey('aStringList') && data['aStringList'] is List<String>) {
-    object.aStringList = data['aStringList'] as List<String>;
-  }
-  if (data.containsKey('numberList') && data['numberList'] is List<List<int>>) {
-    object.numberList = data['numberList'] as List<List<int>>;
-  }
-  if (data.containsKey('drinkList') &&
-      data['drinkList'] is List<List<List<String>>>) {
-    object.drinkList = data['drinkList'] as List<List<List<String>>>;
-  }
-  if (data.containsKey('aStringIntMap') &&
-      data['aStringIntMap'] is Map<String, int>) {
-    object.aStringIntMap = data['aStringIntMap'] as Map<String, int>;
-  }
-  if (data.containsKey('anIntStringMap') &&
-      data['anIntStringMap'] is Map<String, String>) {
-    object.anIntStringMap = new Map<int, String>.fromIterables(
-        (data['anIntStringMap'] as Map<String, String>).keys.map(int.parse),
-        (data['anIntStringMap'] as Map<String, String>).values);
-  }
-  if (data.containsKey('aMapOfMaps') &&
-      data['aMapOfMaps'] is Map<String, Map<String, String>>) {
-    object.aMapOfMaps = new Map<int, Map<String, String>>.fromIterables(
-        (data['aMapOfMaps'] as Map<String, Map<String, String>>)
-            .keys
-            .map(int.parse),
-        (data['aMapOfMaps'] as Map<String, Map<String, String>>).values);
-  }
-  if (data.containsKey('aDateTime') && data['aDateTime'] is String) {
-    object.aDateTime = DateTime.parse(data['aDateTime'] as String);
-  }
-  if (data.containsKey('aNullString') && data['aNullString'] is String) {
-    object.aNullString = data['aNullString'] as String;
-  }
-  if (data.containsKey('aNullInt') && data['aNullInt'] is int) {
-    object.aNullInt = data['aNullInt'] as int;
-  }
-  if (data.containsKey('aBoolTrue') && data['aBoolTrue'] is bool) {
-    object.aBoolTrue = data['aBoolTrue'] as bool;
-  }
-  if (data.containsKey('aBoolFalse') && data['aBoolFalse'] is bool) {
-    object.aBoolFalse = data['aBoolFalse'] as bool;
-  }
-  if (data.containsKey('anInnerClass') &&
-      data['anInnerClass'] is _TestInnerClass) {
-    object.anInnerClass = data['anInnerClass'] as _TestInnerClass;
-  }
+  object.aDateTime = DateTime.parse(data['aDateTime'] as String);
+  object.aNullString = data['aNullString'] as String;
+  object.aNullInt = data['aNullInt'] as int;
+  object.aBoolTrue = data['aBoolTrue'] as bool;
+  object.aBoolFalse = data['aBoolFalse'] as bool;
+  //object.anInnerClass = data['anInnerClass'] as _TestInnerClass;
   return object;
 }
 
@@ -427,38 +495,27 @@ _TestInnerClass _jsonToTestInnerClass(Map<String, dynamic> data) {
   // First find values to use for a constructor
   // Try the most specific constructor first
   object = new _TestInnerClass();
-  if (data.containsKey('anInnerString') && data['anInnerString'] is String) {
-    object.anInnerString = data['anInnerString'] as String;
+  object.anInnerString = data['anInnerString'] as String;
+  object.anInnerNum = data['anInnerNum'] as num;
+  object.anInnerInt = data['anInnerInt'] as int;
+  object.anInnerDouble = data['anInnerDouble'] as double;
+  object.anInnerIntList = data['anInnerIntList'] as List<int>;
+  object.anInnerStringIntMap = <String, int>{};
+  final Iterable<String> anInnerStringIntMapKeys =
+      data['anInnerStringIntMap'].keys as Iterable<String>;
+  for (String anInnerStringIntMapKey in anInnerStringIntMapKeys) {
+    object.anInnerStringIntMap[anInnerStringIntMapKey] =
+        (data['anInnerStringIntMap'] as Map<String, dynamic>)[
+            anInnerStringIntMapKey] as int;
   }
-  if (data.containsKey('anInnerNum') && data['anInnerNum'] is num) {
-    object.anInnerNum = data['anInnerNum'] as num;
+  object.anInnerIntStringMap = <int, String>{};
+  final Iterable<String> anInnerIntStringMapKeys =
+      data['anInnerIntStringMap'].keys as Iterable<String>;
+  for (String anInnerIntStringMapKey in anInnerIntStringMapKeys) {
+    object.anInnerIntStringMap[int.parse(anInnerIntStringMapKey)] =
+        (data['anInnerIntStringMap'] as Map<String, dynamic>)[
+            anInnerIntStringMapKey] as String;
   }
-  if (data.containsKey('anInnerInt') && data['anInnerInt'] is int) {
-    object.anInnerInt = data['anInnerInt'] as int;
-  }
-  if (data.containsKey('anInnerDouble') && data['anInnerDouble'] is double) {
-    object.anInnerDouble = data['anInnerDouble'] as double;
-  }
-  if (data.containsKey('anInnerIntList') &&
-      data['anInnerIntList'] is List<int>) {
-    object.anInnerIntList = data['anInnerIntList'] as List<int>;
-  }
-  if (data.containsKey('anInnerStringIntMap') &&
-      data['anInnerStringIntMap'] is Map<String, int>) {
-    object.anInnerStringIntMap =
-        data['anInnerStringIntMap'] as Map<String, int>;
-  }
-  if (data.containsKey('anInnerIntStringMap') &&
-      data['anInnerIntStringMap'] is Map<String, String>) {
-    object.anInnerIntStringMap = new Map<int, String>.fromIterables(
-        (data['anInnerIntStringMap'] as Map<String, String>)
-            .keys
-            .map(int.parse),
-        (data['anInnerIntStringMap'] as Map<String, String>).values);
-  }
-  if (data.containsKey('anInnerDateTime') &&
-      data['anInnerDateTime'] is String) {
-    object.anInnerDateTime = DateTime.parse(data['anInnerDateTime'] as String);
-  }
+  object.anInnerDateTime = DateTime.parse(data['anInnerDateTime'] as String);
   return object;
 }

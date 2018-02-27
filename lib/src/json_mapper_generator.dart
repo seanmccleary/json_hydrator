@@ -40,6 +40,7 @@ class JsonMapperGenerator extends Generator {
 
   /// Create the function to convert an object to JSON
   String _generateToJsonFunction(ClassElement classElement) {
+    // TODO: Pass this StringBuffer in to the recursive function rather than having it return a string.
     final StringBuffer generatedCode = new StringBuffer("""
             final StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.write('{');""");
@@ -115,7 +116,7 @@ class JsonMapperGenerator extends Generator {
       final String keysArrayCounter =
           "${propertyName.replaceAll(_trimObjName, "").replaceAll(_trimAfterBracket, "")}Counter$nestingLevel";
       final KeyValuePairTypes keyValuePairTypes = _getMapTypes(returnTypeName);
-
+      // TODO: Can I avoid hinstanatiating a list below if I use an iterator?
       generatedCode.write("""
         final List<${keyValuePairTypes.keyType}> $keysArrayName = $propertyName.keys.toList();
         stringBuffer.write('{');
@@ -199,38 +200,44 @@ class JsonMapperGenerator extends Generator {
         .toList();
 
     // And loop over them, trying to set them.
-    for (int count = 0; count < properties.length; count++) {
-      KeyValuePairTypes keyValuePairTypes;
-      final PropertyAccessorElement property = properties[count];
-      final String typeName = property.type.parameters.first.type.displayName;
-      if (_isTypeNameDateTime(typeName)) {
-        generatedCode.write("""
-          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is String) {
-            object.${property.displayName} = DateTime.parse(data['${property.displayName}'] as String);
-          }
-        """);
-      } else if (_isTypeNameMap(typeName) &&
-          _isTypeNameNum(
-              (keyValuePairTypes = _getMapTypes(typeName)).keyType)) {
-        generatedCode.write("""
-          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is Map<String, ${keyValuePairTypes.valueType}>) {
-            object.${property.displayName} = new Map<${keyValuePairTypes.keyType}, ${keyValuePairTypes.valueType}>.fromIterables(
-              (data['${property.displayName}'] as Map<String, ${keyValuePairTypes.valueType}>).keys.map(int.parse),
-              (data['${property.displayName}'] as Map<String, ${keyValuePairTypes.valueType}>).values
-            );
-          }
-        """);
-      } else {
-        generatedCode.write("""
-          if(data.containsKey('${property.displayName}') && data['${property.displayName}'] is $typeName) {
-            object.${property.displayName} = data['${property.displayName}'] as $typeName;
-          }
-        """);
-      }
+    for (PropertyAccessorElement property in properties) {
+      generatedCode.write(_generateToObjectCodeForProperty(property.type.parameters.first.type.displayName, property.displayName, "data", "object.${property.displayName}"));
     }
 
     generatedCode.writeln("return object;");
 
+    return generatedCode.toString();
+  }
+
+  String _generateToObjectCodeForProperty(String typeName, String propertyName, String sourceMapName, String targetObjectName, {bool isPropertyNameVariable: false}) {
+    final String dataSourceKey = isPropertyNameVariable ? propertyName : "'$propertyName'";
+    final StringBuffer generatedCode = new StringBuffer();
+
+    if (_isTypeNameDateTime(typeName)) {
+      generatedCode.write("$targetObjectName = DateTime.parse($sourceMapName[$dataSourceKey] as String);");
+    }
+
+    else if (_isTypeNameMap(typeName)) {
+      final KeyValuePairTypes keyValuePairTypes = _getMapTypes(typeName);
+      final bool isKeyNumeric = _isTypeNameNum(keyValuePairTypes.keyType);
+      final String sourceKeysType = isKeyNumeric ? "String" : keyValuePairTypes.keyType;
+      final String keyName = "${propertyName}Key";
+      final String nextTargetObjectName = isKeyNumeric ? "$targetObjectName[${keyValuePairTypes.keyType}.parse($keyName)]" : "$targetObjectName[$keyName]";
+
+      generatedCode.write("$targetObjectName = <${keyValuePairTypes.keyType}, ${keyValuePairTypes.valueType}>{};");
+
+      generatedCode.write("final Iterable<String> ${keyName}s = $sourceMapName[$dataSourceKey].keys as Iterable<String>;");
+
+      generatedCode.write("""
+          for (String $keyName in ${keyName}s) {
+            ${_generateToObjectCodeForProperty(keyValuePairTypes.valueType, keyName, "($sourceMapName[$dataSourceKey] as Map<$sourceKeysType, dynamic>)", "$nextTargetObjectName", isPropertyNameVariable: true)}
+          }
+      """);
+    }
+
+    else {
+      generatedCode.write("$targetObjectName = $sourceMapName[$dataSourceKey] as $typeName;");
+    }
     return generatedCode.toString();
   }
 
