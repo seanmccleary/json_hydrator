@@ -146,7 +146,8 @@ class _TestOuterClass {
   Map<String, int> aStringIntMap = <String, int>{};
   Map<int, String> anIntStringMap = <int, String>{};
   Map<int, Map<int, bool>> anIntMapOfIntBoolMaps = <int, Map<int, bool>>{};
-  Map<int, Map<String, String>> anIntMapOfStringStringMaps = <int, Map<String, String>>{};
+  Map<int, Map<String, String>> anIntMapOfStringStringMaps =
+      <int, Map<String, String>>{};
   DateTime aDateTime;
   String aNullString;
   int aNullInt;
